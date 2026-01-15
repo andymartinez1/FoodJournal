@@ -2,6 +2,18 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal", "FoodJournal\FoodJournal.csproj", "{EEDF4D9B-AE0D-4496-994D-4BA0F7DDF115}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.UnitTests", "FoodJournal.UnitTests\FoodJournal.UnitTests.csproj", "{61772FB8-B6C6-45E6-85C4-B0CA17A5B2B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.IntegrationTests", "FoodJournal.IntegrationTests\FoodJournal.IntegrationTests.csproj", "{AF485691-785F-4E06-BBCA-F32B1A3B2086}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.Entities", "FoodJournal.Entities\FoodJournal.Entities.csproj", "{6278F715-9A8B-4826-8B75-73D444678251}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.Services", "FoodJournal.Services\FoodJournal.Services.csproj", "{D4BDB1CD-BE12-4EF6-A521-0AC68D820316}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.ServiceContracts", "FoodJournal.ServiceContracts\FoodJournal.ServiceContracts.csproj", "{DB305F45-04DA-4FED-A0DE-14A9CD38BFA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.Data", "FoodJournal.Data\FoodJournal.Data.csproj", "{3A2F0B0F-3631-47B6-A650-5787EFD11DB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +24,29 @@ Global
 		{EEDF4D9B-AE0D-4496-994D-4BA0F7DDF115}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEDF4D9B-AE0D-4496-994D-4BA0F7DDF115}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEDF4D9B-AE0D-4496-994D-4BA0F7DDF115}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61772FB8-B6C6-45E6-85C4-B0CA17A5B2B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61772FB8-B6C6-45E6-85C4-B0CA17A5B2B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61772FB8-B6C6-45E6-85C4-B0CA17A5B2B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61772FB8-B6C6-45E6-85C4-B0CA17A5B2B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF485691-785F-4E06-BBCA-F32B1A3B2086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF485691-785F-4E06-BBCA-F32B1A3B2086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF485691-785F-4E06-BBCA-F32B1A3B2086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF485691-785F-4E06-BBCA-F32B1A3B2086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6278F715-9A8B-4826-8B75-73D444678251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6278F715-9A8B-4826-8B75-73D444678251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6278F715-9A8B-4826-8B75-73D444678251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6278F715-9A8B-4826-8B75-73D444678251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4BDB1CD-BE12-4EF6-A521-0AC68D820316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4BDB1CD-BE12-4EF6-A521-0AC68D820316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4BDB1CD-BE12-4EF6-A521-0AC68D820316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4BDB1CD-BE12-4EF6-A521-0AC68D820316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB305F45-04DA-4FED-A0DE-14A9CD38BFA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB305F45-04DA-4FED-A0DE-14A9CD38BFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB305F45-04DA-4FED-A0DE-14A9CD38BFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB305F45-04DA-4FED-A0DE-14A9CD38BFA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A2F0B0F-3631-47B6-A650-5787EFD11DB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A2F0B0F-3631-47B6-A650-5787EFD11DB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A2F0B0F-3631-47B6-A650-5787EFD11DB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A2F0B0F-3631-47B6-A650-5787EFD11DB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
