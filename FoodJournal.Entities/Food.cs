@@ -16,7 +16,7 @@ public class Food
 
     public double? Carbs { get; set; }
 
-    public List<Meal> Meals { get; set; }
+    public List<Meal> Meals { get; set; } = [];
 }
 
 public enum FoodCategory
@@ -27,5 +27,5 @@ public enum FoodCategory
     Dairy,
     Grain,
     Seafood,
-    Processed,
+    Processed
 }

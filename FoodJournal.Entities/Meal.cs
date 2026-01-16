@@ -18,7 +18,7 @@ public class Meal
 
     public double? Carbs { get; set; }
 
-    public List<Food> Ingredients { get; set; }
+    public List<Food> Ingredients { get; set; } = [];
 }
 
 public enum MealType
@@ -26,5 +26,5 @@ public enum MealType
     Breakfast,
     Lunch,
     Dinner,
-    Snack,
+    Snack
 }
