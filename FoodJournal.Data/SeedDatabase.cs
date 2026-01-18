@@ -10,7 +10,8 @@ public static class SeedDatabase
     public static void InitializeDatabase(IServiceProvider serviceProvider)
     {
         using var context = new ApplicationDbContext(
-            serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
+            serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()
+        );
 
         // Seeding a test user
         var hasher = new PasswordHasher<ApplicationUser>();
@@ -25,48 +26,51 @@ public static class SeedDatabase
                 EmailConfirmed = true,
                 LockoutEnabled = false,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                PasswordHash = hasher.HashPassword(null, "Password1!")
-            });
+                PasswordHash = hasher.HashPassword(null, "Password1!"),
+            }
+        );
 
         context.FoodItems.AddRange(
             new Food
             {
                 Name = "Chicken Breast",
-                Category = FoodCategory.Meat,
+                Category = nameof(FoodCategory.Meat),
                 Calories = 165,
                 Protein = 31,
                 Fat = 3.6,
-                Carbs = 0
+                Carbs = 0,
             },
             new Food
             {
                 Name = "Broccoli",
-                Category = FoodCategory.Vegetable,
+                Category = nameof(FoodCategory.Vegetable),
                 Calories = 55,
                 Protein = 3.7,
                 Fat = 0.6,
-                Carbs = 11.2
+                Carbs = 11.2,
             },
             new Food
             {
                 Name = "Brown Rice",
-                Category = FoodCategory.Grain,
+                Category = nameof(FoodCategory.Grain),
                 Calories = 216,
                 Protein = 5,
                 Fat = 1.8,
-                Carbs = 45
-            });
+                Carbs = 45,
+            }
+        );
 
         context.Meals.AddRange(
             new Meal
             {
                 Name = "Grilled Chicken with Broccoli and Rice",
-                Description = "A healthy meal with grilled chicken breast, steamed broccoli, and brown rice.",
+                Description =
+                    "A healthy meal with grilled chicken breast, steamed broccoli, and brown rice.",
                 MealType = MealType.Lunch,
                 Calories = 436,
                 Protein = 39.7,
                 Fat = 6,
-                Carbs = 56.2
+                Carbs = 56.2,
             },
             new Meal
             {
@@ -76,8 +80,9 @@ public static class SeedDatabase
                 Calories = 500,
                 Protein = 40,
                 Fat = 10,
-                Carbs = 60
-            });
+                Carbs = 60,
+            }
+        );
 
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();

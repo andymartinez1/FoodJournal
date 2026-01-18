@@ -6,11 +6,11 @@ public interface IFoodService
 {
     public Task<FoodResponse> AddFood(AddFoodRequest? foodRequest);
 
-    public Task<FoodResponse?> GetFoodById(int foodId);
+    public Task<FoodResponse?> GetFoodById(int? foodId);
 
     public Task<List<FoodResponse>> GetAllFood();
 
-    public Task<FoodResponse?> UpdateFood(AddFoodRequest? foodRequest);
+    public Task<FoodResponse?> UpdateFood(UpdateFoodRequest? foodRequest);
 
-    public Task<bool> DeleteFood(int foodId);
+    public Task<bool> DeleteFood(int? foodId);
 }

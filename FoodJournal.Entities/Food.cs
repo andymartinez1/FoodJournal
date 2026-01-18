@@ -6,7 +6,7 @@ public class Food
 
     public string Name { get; set; } = string.Empty;
 
-    public FoodCategory Category { get; set; }
+    public string? Category { get; set; }
 
     public int? Calories { get; set; }
 
@@ -27,5 +27,5 @@ public enum FoodCategory
     Dairy,
     Grain,
     Seafood,
-    Processed
+    Processed,
 }
