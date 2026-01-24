@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal", "FoodJournal\FoodJournal.csproj", "{EEDF4D9B-AE0D-4496-994D-4BA0F7DDF115}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.UI", "FoodJournal.UI\FoodJournal.UI.csproj", "{EEDF4D9B-AE0D-4496-994D-4BA0F7DDF115}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodJournal.UnitTests", "FoodJournal.UnitTests\FoodJournal.UnitTests.csproj", "{61772FB8-B6C6-45E6-85C4-B0CA17A5B2B0}"
 EndProject

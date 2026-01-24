@@ -5,14 +5,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-FoodJournal-13409d47-d5d5-484d-b735-c64cd2913e3a</UserSecretsId>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <RootNamespace>FoodJournal</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\FoodJournal.Data\FoodJournal.Data.csproj" />
+    <ProjectReference Include="..\FoodJournal.ServiceContracts\FoodJournal.ServiceContracts.csproj" />
+    <ProjectReference Include="..\FoodJournal.Services\FoodJournal.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference
+      Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter"
+      Version="10.0.2"
+    />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
   </ItemGroup>
 </Project>

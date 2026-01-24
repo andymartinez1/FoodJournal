@@ -57,6 +57,87 @@ public static class SeedDatabase
                 Protein = 5,
                 Fat = 1.8,
                 Carbs = 45,
+            },
+            new Food
+            {
+                Name = "Salmon",
+                Category = nameof(FoodCategory.Seafood),
+                Calories = 208,
+                Protein = 20,
+                Fat = 13,
+                Carbs = 0,
+            },
+            new Food
+            {
+                Name = "Almonds (100g)",
+                Category = nameof(FoodCategory.Nuts),
+                Calories = 575,
+                Protein = 21,
+                Fat = 49,
+                Carbs = 22,
+            },
+            new Food
+            {
+                Name = "Greek Yogurt (plain, 170g)",
+                Category = nameof(FoodCategory.Dairy),
+                Calories = 100,
+                Protein = 17,
+                Fat = 0.7,
+                Carbs = 6,
+            },
+            new Food
+            {
+                Name = "Apple (medium)",
+                Category = nameof(FoodCategory.Fruit),
+                Calories = 95,
+                Protein = 0.5,
+                Fat = 0.3,
+                Carbs = 25,
+            },
+            new Food
+            {
+                Name = "Avocado (medium)",
+                Category = nameof(FoodCategory.Fruit),
+                Calories = 234,
+                Protein = 3,
+                Fat = 21,
+                Carbs = 12,
+            },
+            new Food
+            {
+                Name = "Sweet Potato (medium)",
+                Category = nameof(FoodCategory.Vegetable),
+                Calories = 103,
+                Protein = 2,
+                Fat = 0.2,
+                Carbs = 24,
+            },
+            new Food
+            {
+                Name = "Oatmeal (cooked, 1 cup)",
+                Category = nameof(FoodCategory.Grain),
+                Calories = 154,
+                Protein = 6,
+                Fat = 3,
+                Carbs = 27,
+            },
+            new Food
+            {
+                Name = "Egg (large)",
+                Category = nameof(FoodCategory.Protein),
+                Calories = 78,
+                Protein = 6,
+                Fat = 5,
+                Carbs = 0.6,
+            },
+            new Food
+            {
+                Name = "Spinach (raw, 100g)",
+                Category = nameof(FoodCategory.Vegetable),
+                Calories = 23,
+                Protein = 2.9,
+                Fat = 0.4,
+                Carbs = 3.6,
             }
         );
 

@@ -1,0 +1,114 @@
+﻿@page "/foods/edit"
+@using Microsoft.EntityFrameworkCore
+@using FoodJournal.Entities
+@inject IDbContextFactory<FoodJournal.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Food</h2>
+<hr />
+@if (Food is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Food" OnValidSubmit="UpdateFood" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Food.FoodId" value="@Food.FoodId" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Food.Name" class="form-control" />
+                    <ValidationMessage For="() => Food.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category:</label>
+                    <InputText id="category" @bind-Value="Food.Category" class="form-control" />
+                    <ValidationMessage For="() => Food.Category" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="calories" class="form-label">Calories:</label>
+                    <InputNumber id="calories" @bind-Value="Food.Calories" class="form-control" />
+                    <ValidationMessage For="() => Food.Calories" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="protein" class="form-label">Protein:</label>
+                    <InputNumber id="protein" @bind-Value="Food.Protein" class="form-control" />
+                    <ValidationMessage For="() => Food.Protein" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="fat" class="form-label">Fat:</label>
+                    <InputNumber id="fat" @bind-Value="Food.Fat" class="form-control" />
+                    <ValidationMessage For="() => Food.Fat" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="carbs" class="form-label">Carbs:</label>
+                    <InputNumber id="carbs" @bind-Value="Food.Carbs" class="form-control" />
+                    <ValidationMessage For="() => Food.Carbs" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/foods">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int FoodId { get; set; }
+
+    [SupplyParameterFromForm]
+    private Food? Food { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Food ??= await context.FoodItems.FirstOrDefaultAsync(m => m.FoodId == FoodId);
+
+        if (Food is null)
+        {
+            NavigationManager.NotFound();
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateFood()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Food!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!FoodExists(Food!.FoodId))
+            {
+                NavigationManager.NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/foods");
+    }
+
+    private bool FoodExists(int foodid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.FoodItems.Any(e => e.FoodId == foodid);
+    }
+}

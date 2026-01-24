@@ -1,0 +1,59 @@
+﻿@page "/foods"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject IFoodService FoodService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Food</h1>
+
+<p>
+    <a href="foods/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="FoodResponses">
+    <PropertyColumn Property="food => food.Name"/>
+    <PropertyColumn Property="food => food.Category"/>
+    <PropertyColumn Property="food => food.Calories"/>
+    <PropertyColumn Property="food => food.Protein"/>
+    <PropertyColumn Property="food => food.Fat"/>
+    <PropertyColumn Property="food => food.Carbs"/>
+
+    <TemplateColumn Context="food">
+        <a href="@($"foods/edit?foodId={food.FoodId}")">Edit</a> |
+        <a href="@($"foods/details?foodId={food.FoodId}")">Details</a> |
+        <a href="@($"foods/delete?foodId={food.FoodId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private readonly string _categorySearch = string.Empty;
+    private QuickGrid<FoodResponse> _foodItemGrid;
+    private List<FoodResponse> _foods;
+
+    private IQueryable<FoodResponse> FoodResponses
+    {
+        get
+        {
+            var result = _foods.AsQueryable();
+            if (!string.IsNullOrEmpty(_categorySearch))
+            {
+                result = result.Where(f => f.Category.Contains(_categorySearch, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return result;
+        }
+        set;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _foods = await LoadFoodItems();
+    }
+
+    private async Task<List<FoodResponse>> LoadFoodItems()
+    {
+        return await FoodService.GetAllFood();
+    }
+
+
+}

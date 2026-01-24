@@ -28,4 +28,6 @@ public enum FoodCategory
     Grain,
     Seafood,
     Processed,
+    Nuts,
+    Protein,
 }

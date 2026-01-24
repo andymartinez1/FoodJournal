@@ -21,7 +21,7 @@ namespace FoodJournal.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
 
-            modelBuilder.Entity("FoodJournal.Data.ApplicationUser", b =>
+            modelBuilder.Entity("FoodJournal.UI.Data.ApplicationUser", b =>
             {
                 b.Property<string>("Id")
                     .HasColumnType("TEXT");
@@ -246,7 +246,7 @@ namespace FoodJournal.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
             {
-                b.HasOne("FoodJournal.Data.ApplicationUser", null)
+                b.HasOne("FoodJournal.UI.Data.ApplicationUser", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -255,7 +255,7 @@ namespace FoodJournal.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
             {
-                b.HasOne("FoodJournal.Data.ApplicationUser", null)
+                b.HasOne("FoodJournal.UI.Data.ApplicationUser", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -264,7 +264,7 @@ namespace FoodJournal.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserPasskey<string>", b =>
             {
-                b.HasOne("FoodJournal.Data.ApplicationUser", null)
+                b.HasOne("FoodJournal.UI.Data.ApplicationUser", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -330,7 +330,7 @@ namespace FoodJournal.Migrations
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodJournal.Data.ApplicationUser", null)
+                b.HasOne("FoodJournal.UI.Data.ApplicationUser", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -339,7 +339,7 @@ namespace FoodJournal.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
             {
-                b.HasOne("FoodJournal.Data.ApplicationUser", null)
+                b.HasOne("FoodJournal.UI.Data.ApplicationUser", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
