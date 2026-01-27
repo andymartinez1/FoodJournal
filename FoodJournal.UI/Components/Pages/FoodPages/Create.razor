@@ -20,7 +20,12 @@
             </div>
             <div class="mb-3">
                 <label for="category" class="form-label">Category:</label>
-                <InputText id="category" @bind-Value="Food.Category" class="form-control"/>
+                <InputSelect id="category" class="form-control" @bind-Value="Food.Category">
+                    @foreach (FoodCategory cat in Enum.GetValues(typeof(FoodCategory)))
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                </InputSelect>
                 <ValidationMessage For="() => Food.Category" class="text-danger"/>
             </div>
             <div class="mb-3">
@@ -43,6 +48,16 @@
                 <InputNumber id="carbs" @bind-Value="Food.Carbs" class="form-control"/>
                 <ValidationMessage For="() => Food.Carbs" class="text-danger"/>
             </div>
+            <div class="mb-3">
+                <label for="meals" class="form-label">Meals:</label>
+                <InputSelect id="meals" @bind-Value="Food.Meals" class="form-control">
+                    @foreach (var meal in Food.Meals)
+                    {
+                        <option value="@meal">@meal</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Food.Meals" class="text-danger"/>
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -53,16 +68,16 @@
 </div>
 
 @code {
-    [SupplyParameterFromForm] private FoodResponse Food { get; set; } = default!;
+    [SupplyParameterFromForm] private AddFoodRequest Food { get; set; } = default!;
 
     protected override void OnInitialized()
     {
-        Food ??= new FoodResponse();
+        Food = new AddFoodRequest();
     }
 
     private async Task AddFood()
     {
-        // FoodService.AddFood();
+        await FoodService.AddFood(Food);
 
         NavigationManager.NavigateTo("/foods");
     }

@@ -18,16 +18,3 @@ public class Food
 
     public List<Meal> Meals { get; set; } = [];
 }
-
-public enum FoodCategory
-{
-    Fruit,
-    Vegetable,
-    Meat,
-    Dairy,
-    Grain,
-    Seafood,
-    Processed,
-    Nuts,
-    Protein,
-}

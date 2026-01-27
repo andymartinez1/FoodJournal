@@ -1,4 +1,5 @@
 using FoodJournal.Data;
+using FoodJournal.Entities;
 using FoodJournal.ServiceContracts;
 using FoodJournal.ServiceContracts.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -91,5 +92,20 @@ public class FoodService : IFoodService
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<Food> ConvertToFoodEntity(FoodResponse foodResponse)
+    {
+        return new Food
+        {
+            FoodId = foodResponse.FoodId,
+            Name = foodResponse.Name,
+            Category = foodResponse.Category,
+            Calories = foodResponse.Calories,
+            Protein = foodResponse.Protein,
+            Fat = foodResponse.Fat,
+            Carbs = foodResponse.Carbs,
+            Meals = foodResponse.Meals
+        };
     }
 }

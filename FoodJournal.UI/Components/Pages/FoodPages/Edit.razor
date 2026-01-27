@@ -1,7 +1,5 @@
-﻿@page "/foods/edit"
-@using Microsoft.EntityFrameworkCore
-@using FoodJournal.Entities
-@inject IDbContextFactory<FoodJournal.Data.ApplicationDbContext> DbFactory
+﻿@page "/foods/edit/{FoodId:int}"
+@inject IFoodService FoodService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Edit</PageTitle>
@@ -9,7 +7,7 @@
 <h1>Edit</h1>
 
 <h2>Food</h2>
-<hr />
+<hr/>
 @if (Food is null)
 {
     <p><em>Loading...</em></p>
@@ -19,38 +17,53 @@ else
     <div class="row">
         <div class="col-md-4">
             <EditForm method="post" Model="Food" OnValidSubmit="UpdateFood" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
+                <DataAnnotationsValidator/>
                 <ValidationSummary role="alert"/>
-                <input type="hidden" name="Food.FoodId" value="@Food.FoodId" />
+                <input type="hidden" name="Food.FoodId" value="@Food.FoodId"/>
                 <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" @bind-Value="Food.Name" class="form-control" />
-                    <ValidationMessage For="() => Food.Name" class="text-danger" />
+                    <InputText id="name" @bind-Value="Food.Name" class="form-control"/>
+                    <ValidationMessage For="() => Food.Name" class="text-danger"/>
                 </div>
                 <div class="mb-3">
                     <label for="category" class="form-label">Category:</label>
-                    <InputText id="category" @bind-Value="Food.Category" class="form-control" />
-                    <ValidationMessage For="() => Food.Category" class="text-danger" />
+                    <InputSelect id="category" class="form-control" @bind-Value="Food.Category">
+                        @foreach (FoodCategory cat in Enum.GetValues(typeof(FoodCategory)))
+                        {
+                            <option value="@cat">@cat</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Food.Category" class="text-danger"/>
                 </div>
                 <div class="mb-3">
                     <label for="calories" class="form-label">Calories:</label>
-                    <InputNumber id="calories" @bind-Value="Food.Calories" class="form-control" />
-                    <ValidationMessage For="() => Food.Calories" class="text-danger" />
+                    <InputNumber id="calories" @bind-Value="Food.Calories" class="form-control"/>
+                    <ValidationMessage For="() => Food.Calories" class="text-danger"/>
                 </div>
                 <div class="mb-3">
                     <label for="protein" class="form-label">Protein:</label>
-                    <InputNumber id="protein" @bind-Value="Food.Protein" class="form-control" />
-                    <ValidationMessage For="() => Food.Protein" class="text-danger" />
+                    <InputNumber id="protein" @bind-Value="Food.Protein" class="form-control"/>
+                    <ValidationMessage For="() => Food.Protein" class="text-danger"/>
                 </div>
                 <div class="mb-3">
                     <label for="fat" class="form-label">Fat:</label>
-                    <InputNumber id="fat" @bind-Value="Food.Fat" class="form-control" />
-                    <ValidationMessage For="() => Food.Fat" class="text-danger" />
+                    <InputNumber id="fat" @bind-Value="Food.Fat" class="form-control"/>
+                    <ValidationMessage For="() => Food.Fat" class="text-danger"/>
                 </div>
                 <div class="mb-3">
                     <label for="carbs" class="form-label">Carbs:</label>
-                    <InputNumber id="carbs" @bind-Value="Food.Carbs" class="form-control" />
-                    <ValidationMessage For="() => Food.Carbs" class="text-danger" />
+                    <InputNumber id="carbs" @bind-Value="Food.Carbs" class="form-control"/>
+                    <ValidationMessage For="() => Food.Carbs" class="text-danger"/>
+                </div>
+                <div class="mb-3">
+                    <label for="meals" class="form-label">Meals:</label>
+                    <InputSelect id="meals" @bind-Value="Food.Meals" class="form-control">
+                        @foreach (var meal in Food.Meals)
+                        {
+                            <option value="@meal">@meal</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Food.Meals" class="text-danger"/>
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
@@ -63,16 +76,13 @@ else
 </div>
 
 @code {
-    [SupplyParameterFromQuery]
-    private int FoodId { get; set; }
+    [Parameter] public int FoodId { get; set; }
 
-    [SupplyParameterFromForm]
-    private Food? Food { get; set; }
+    [SupplyParameterFromForm] private UpdateFoodRequest? Food { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        Food ??= await context.FoodItems.FirstOrDefaultAsync(m => m.FoodId == FoodId);
+        var food = await FoodService.GetFoodById(FoodId);
 
         if (Food is null)
         {
@@ -80,35 +90,15 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task UpdateFood()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(Food!).State = EntityState.Modified;
-
-        try
+        if (Food is null)
         {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!FoodExists(Food!.FoodId))
-            {
-                NavigationManager.NotFound();
-            }
-            else
-            {
-                throw;
-            }
+            NavigationManager.NotFound();
+            return;
         }
 
         NavigationManager.NavigateTo("/foods");
     }
 
-    private bool FoodExists(int foodid)
-    {
-        using var context = DbFactory.CreateDbContext();
-        return context.FoodItems.Any(e => e.FoodId == foodid);
-    }
 }

@@ -1,31 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Update="app.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference
-      Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"
-      Version="10.0.2"
-    />
-    <PackageReference
-      Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
-      Version="10.0.2"
-    />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FoodJournal.Entities\FoodJournal.Entities.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Update="app.db">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference
+                Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"
+                Version="10.0.2"
+        />
+        <PackageReference
+                Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"
+                Version="10.0.2"
+        />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\FoodJournal.Entities\FoodJournal.Entities.csproj"/>
+        <ProjectReference Include="..\FoodJournal.ServiceContracts\FoodJournal.ServiceContracts.csproj"/>
+    </ItemGroup>
 </Project>

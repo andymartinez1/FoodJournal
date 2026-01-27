@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FoodJournal.Entities;
+using FoodJournal.ServiceContracts.Enums;
 
 namespace FoodJournal.ServiceContracts.DTOs;
 
@@ -33,7 +34,7 @@ public class UpdateFoodRequest
             Protein = Protein,
             Fat = Fat,
             Carbs = Carbs,
-            Meals = Meals,
+            Meals = Meals
         };
     }
 }
