@@ -1,6 +1,7 @@
 ﻿@page "/foods/delete/{FoodId:int}"
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Delete</PageTitle>
 
@@ -42,8 +43,7 @@
         </dl>
         <EditForm method="post" Model="food" OnValidSubmit="DeleteFood" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(food is null)">Delete</button>
-            |
-            <a href="/foods">Back to List</a>
+            <button class="btn btn-secondary" @onclick="Home">Go Back</button>
         </EditForm>
     }
 </div>
@@ -67,6 +67,11 @@
     {
         await FoodService.DeleteFood(FoodId);
 
+        NavigationManager.NavigateTo("/foods");
+    }
+
+    private void Home()
+    {
         NavigationManager.NavigateTo("/foods");
     }
 

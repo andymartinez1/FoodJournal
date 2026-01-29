@@ -1,6 +1,7 @@
 ﻿@page "/foods/create"
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Create</PageTitle>
 
@@ -53,18 +54,15 @@
                 <InputSelect id="meals" @bind-Value="Food.Meals" class="form-control">
                     @foreach (var meal in Food.Meals)
                     {
-                        <option value="@meal">@meal</option>
+                        <option value="@meal.Name">@meal.Name</option>
                     }
                 </InputSelect>
                 <ValidationMessage For="() => Food.Meals" class="text-danger"/>
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
+            <button class="btn btn-secondary" @onclick="Home">Go Back</button>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/foods">Back to List</a>
 </div>
 
 @code {
@@ -79,6 +77,11 @@
     {
         await FoodService.AddFood(Food);
 
+        NavigationManager.NavigateTo("/foods");
+    }
+
+    private void Home()
+    {
         NavigationManager.NavigateTo("/foods");
     }
 

@@ -51,7 +51,6 @@ public class FoodService : IFoodService
     public async Task<List<FoodResponse>> GetAllFood()
     {
         var foodList = await _context.FoodItems.Select(f => f.ToFoodResponse()).ToListAsync();
-        _logger.LogInformation("All food items retrieved.");
         return foodList;
     }
 
@@ -105,7 +104,7 @@ public class FoodService : IFoodService
             Protein = foodResponse.Protein,
             Fat = foodResponse.Fat,
             Carbs = foodResponse.Carbs,
-            Meals = foodResponse.Meals
+            Meals = foodResponse.Meals,
         };
     }
 }

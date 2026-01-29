@@ -1,6 +1,7 @@
 ﻿@page "/foods/details/{FoodId:int}"
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Details</PageTitle>
 
@@ -27,10 +28,16 @@
             <dd class="col-sm-10">@food.Fat</dd>
             <dt class="col-sm-2">Carbs</dt>
             <dd class="col-sm-10">@food.Carbs</dd>
+            <dt class="col-sm-2">Used in</dt>
+            @foreach (var meal in food.Meals)
+            {
+                <dd class="col-sm-10">@meal.Name</dd>
+            }
+
         </dl>
         <div>
-            <a href="@($"/foods/edit?foodid={food.FoodId}")">Edit</a> |
-            <a href="@("/foods")">Back to List</a>
+            <button class="btn btn-info" @onclick="() => Edit(food.FoodId)">Edit</button>
+            <button class="btn btn-secondary" @onclick="Home">Go Back</button>
         </div>
     }
 </div>
@@ -48,6 +55,16 @@
         {
             NavigationManager.NotFound();
         }
+    }
+
+    private void Edit(object foodId)
+    {
+        NavigationManager.NavigateTo($"/foods/edit/{foodId}");
+    }
+
+    private void Home()
+    {
+        NavigationManager.NavigateTo("/foods");
     }
 
 }
