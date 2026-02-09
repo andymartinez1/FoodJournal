@@ -5,8 +5,7 @@ namespace FoodJournal.ServiceContracts.DTOs;
 
 public class FoodResponse
 {
-    [Display(Name = "Food ID")]
-    public int FoodId { get; set; }
+    [Display(Name = "Food ID")] public int FoodId { get; set; }
 
     public string Name { get; set; } = string.Empty;
 
@@ -36,7 +35,7 @@ public static class FoodExtensions
             Protein = food.Protein,
             Fat = food.Fat,
             Carbs = food.Carbs,
-            Meals = food.Meals,
+            Meals = food.Meals
         };
     }
 }

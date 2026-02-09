@@ -10,5 +10,9 @@ public enum FoodCategory
     Seafood,
     Processed,
     Nuts,
-    Protein
+    Protein,
+    Condiment,
+    Fat,
+    Snack,
+    Sweetener
 }
