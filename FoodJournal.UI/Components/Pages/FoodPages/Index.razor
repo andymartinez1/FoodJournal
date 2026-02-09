@@ -1,5 +1,4 @@
 ﻿@page "/foods"
-@using Microsoft.AspNetCore.Components.QuickGrid
 @inject IFoodService FoodService
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
@@ -11,53 +10,59 @@
 <p>
     <a href="foods/create" class="btn btn-primary">Create New</a>
 </p>
-<div class="page-size-chooser">
-    Items per page:
-    <select @bind="@pagination.ItemsPerPage">
-        <option>5</option>
-        <option>10</option>
-        <option>20</option>
-        <option>50</option>
-    </select>
-</div>
 
 <div class="grid">
-    <QuickGrid Class="table" Items="FoodResponses" Pagination="@pagination" @ref="_foodItemGrid">
-        <PropertyColumn Property="food => food.Name" Sortable="true" Class="food-name">
-            <ColumnOptions>
-                <div class="search-box">
-                    <input type="search" autofocus @bind="_nameSearch" @bind:event="oninput"
-                           placeholder="Country name..."/>
-                </div>
-            </ColumnOptions>
-        </PropertyColumn>
-        <PropertyColumn Property="food => food.Category" Sortable="true"/>
-        <PropertyColumn Property="food => food.Calories" Sortable="true"/>
-        <PropertyColumn Property="food => food.Protein" Sortable="true"/>
-        <PropertyColumn Property="food => food.Fat" Sortable="true"/>
-        <PropertyColumn Property="food => food.Carbs" Sortable="true"/>
+    <Grid TItem="FoodResponse"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="FoodDataProvider"
+          AllowFiltering="true"
+          AllowPaging="true"
+          PageSize="10"
+          AllowSorting="true"
+          Responsive="true">
 
-        <TemplateColumn Context="food">
-            <button class="btn btn-info" @onclick="() => Edit(food.FoodId)">Edit</button>
-            <button class="btn btn-secondary" @onclick="() => Detail(food.FoodId)">Details</button>
-            <button class="btn btn-danger" @onclick="() => Delete(food.FoodId)">Delete</button>
-        </TemplateColumn>
-    </QuickGrid>
+        <GridColumns>
+            <GridColumn TItem="FoodResponse" HeaderText="Name" PropertyName="Name"
+                        SortKeySelector="food => food.Name">
+                @context.Name
+            </GridColumn>
+            <GridColumn TItem="FoodResponse" HeaderText="Category" PropertyName="Category"
+                        SortKeySelector="food => food.Category">
+                @context.Category
+            </GridColumn>
+            <GridColumn TItem="FoodResponse" HeaderText="Calories" PropertyName="Calories"
+                        SortKeySelector="food => food.Calories">
+                @context.Calories
+            </GridColumn>
+            <GridColumn TItem="FoodResponse" HeaderText="Protein(g)" PropertyName="Protein"
+                        SortKeySelector="food => food.Protein">
+                @context.Protein
+            </GridColumn>
+            <GridColumn TItem="FoodResponse" HeaderText="Fat(g)" PropertyName="Fat"
+                        SortKeySelector="food => food.Fat">
+                @context.Fat
+            </GridColumn>
+            <GridColumn TItem="FoodResponse" HeaderText="Carbs(g)" PropertyName="Carbs"
+                        SortKeySelector="food => food.Carbs">
+                @context.Carbs
+            </GridColumn>
+
+        </GridColumns>
+
+    </Grid>
 </div>
 
-<Paginator State="@pagination"/>
-
 @code {
-    readonly PaginationState pagination = new() { ItemsPerPage = 10 };
-    private readonly string _categorySearch = string.Empty;
-    private string _nameSearch = string.Empty;
-    private QuickGrid<FoodResponse> _foodItemGrid;
     private List<FoodResponse> _foods = [];
-    private IQueryable<FoodResponse> FoodResponses => _foods.AsQueryable().Where(f => f.Name.Contains(_nameSearch, StringComparison.OrdinalIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
         _foods = await LoadFoodItems();
+    }
+
+    private async Task<GridDataProviderResult<FoodResponse>> FoodDataProvider(GridDataProviderRequest<FoodResponse> request)
+    {
+        return await Task.FromResult(request.ApplyTo(_foods));
     }
 
     private async Task<List<FoodResponse>> LoadFoodItems()
