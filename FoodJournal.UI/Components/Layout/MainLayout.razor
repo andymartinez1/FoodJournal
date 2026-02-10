@@ -6,16 +6,16 @@
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar>
+    <MudAppBar Elevation="2">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
                        OnClick="@(e => DrawerToggle())"/>
-        My Application
+        Food Journal &nbsp; <i class="fa-solid fa-burger"></i>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen">
+    <MudDrawer ClipMode="DrawerClipMode.Always" Elevation="0" @bind-Open="@_drawerOpen">
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Medium">
+        <MudContainer MaxWidth="MaxWidth.Large">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -30,3 +30,9 @@
     }
 
 }
+
+<style>
+    .mud-appbar {
+        background-color: #6873fe;
+    }
+</style>

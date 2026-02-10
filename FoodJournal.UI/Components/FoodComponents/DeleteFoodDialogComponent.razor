@@ -1,0 +1,62 @@
+﻿@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText>
+            <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>
+            Delete Food?
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Value="@Food.Name" Label="Name" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Category" Label="Category" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Calories" Label="Calories" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Protein" Label="Protein" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Fat" Label="Fat" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Carbs" Label="Carbs" ReadOnly="true"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Delete">Delete</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+    [Parameter] public FoodResponse Food { get; set; }
+
+    private void Delete()
+    {
+        Snackbar.Add("Food Deleted", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+}
+
+<style>
+    .blur {
+        backdrop-filter: blur(10px);
+    }
+
+    .mud-dialog {
+        width: 500px;
+    }
+
+    .dialog-background {
+        background-color: transparent;
+    }
+
+    .dialog-background-title {
+        background: #6873fe;
+        color: #fff;
+    }
+
+    .dialog-background-surface {
+        background: #dedede;
+    }
+</style>

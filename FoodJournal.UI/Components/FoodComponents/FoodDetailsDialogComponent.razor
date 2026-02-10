@@ -1,0 +1,61 @@
+﻿@inject IFoodService FoodService
+
+<MudDialog Class="blur dialog-background" TitleClass="blur dialog-background-title"
+           ContentClass="dialog-background-surface py-10" ActionsClass="dialog-background-surface">
+    <TitleContent>
+        <MudText>
+            Details for @Food.Name:
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Value="@Food.Name" Label="Name" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Category" Label="Category" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Calories" Label="Calories" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Protein" Label="Protein" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Fat" Label="Fat" ReadOnly="true"></MudTextField>
+        <MudTextField Value="@Food.Carbs" Label="Carbs" ReadOnly="true"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+    [Parameter] public FoodResponse Food { get; set; }
+
+    private void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+}
+
+<style>
+    .blur {
+        backdrop-filter: blur(10px);
+    }
+
+    .mud-dialog {
+        width: 500px;
+    }
+
+    .dialog-background {
+        background-color: transparent;
+    }
+
+    .dialog-background-title {
+        background: #6873fe;
+        color: #fff;
+    }
+
+    .dialog-background-surface {
+        background: #dedede;
+    }
+</style>

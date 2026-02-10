@@ -1,53 +1,86 @@
 ﻿@page "/foods"
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 @rendermode InteractiveServer
 
 <PageTitle>Food</PageTitle>
 
+<MudGrid>
+    <MudItem xs="3">
+        <MudTextField T="string" Value="@NameSearch"
+                      ValueChanged="@(v => OnSearchChanged(nameof(NameSearch), v))"
+                      ValueExpression="(() => NameSearch)"
+                      Label="Search Food Name"
+                      Variant="Variant.Outlined"
+                      Immediate="true"/>
+    </MudItem>
+    <MudItem xs="3">
+        <MudTextField T="string" Value="@CategorySearch"
+                      ValueChanged="@(v => OnSearchChanged(nameof(CategorySearch), v))"
+                      ValueExpression="(() => CategorySearch)"
+                      Label="Search Food Category"
+                      Variant="Variant.Outlined"
+                      Immediate="true"/>
+    </MudItem>
+    <MudItem xs="1" Class="d-flex flex-column justify-center align-center">
+        <label>Clear Filters</label>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@ClearFilters">
+            <i class="fa-solid fa-x"></i></MudButton>
+    </MudItem>
+    <MudItem xs="1" Class="d-flex flex-column justify-center align-center">
+        <label>Add Food</label>
+        <MudButton Variant="Variant.Outlined" Color="Color.Tertiary" @onclick="Create">
+            <i class="fa-solid fa-plus"></i></MudButton>
+    </MudItem>
+</MudGrid>
 
-<p>
-    <a href="foods/create" class="btn btn-primary">Create New</a>
-</p>
+<MudTable Items="@_filteredFoods" Hover="true" Breakpoint="Breakpoint.Sm"
+          LoadingProgressColor="Color.Info" Class="mt-3">
 
-<div class="grid">
-    <MudTable Items="@_foods" Hover="true" Breakpoint="Breakpoint.Sm"
-              LoadingProgressColor="Color.Info">
-
-        <HeaderContent>
-            <MudTh>Name</MudTh>
-            <MudTh>Category</MudTh>
-            <MudTh>Calories</MudTh>
-            <MudTh>Protein(g)</MudTh>
-            <MudTh>Fat(g)</MudTh>
-            <MudTh>Carbs(g)</MudTh>
-            <MudTh>Actions</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Nr">@context.Name</MudTd>
-            <MudTd DataLabel="Sign">@context.Category</MudTd>
-            <MudTd DataLabel="Name">@context.Calories</MudTd>
-            <MudTd DataLabel="Position">@context.Protein</MudTd>
-            <MudTd DataLabel="Molar mass">@context.Fat</MudTd>
-            <MudTd DataLabel="Molar mass">@context.Carbs</MudTd>
-            <MudTd DataLabel="Molar mass">
-                <MudButton Variant="Variant.Outlined" Color="Color.Primary"><i class="fa-solid fa-pen-to-square"></i></MudButton>
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary"><i class="fa-solid fa-trash-can"></i></MudButton>
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager/>
-        </PagerContent>
-    </MudTable>
-</div>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Category</MudTh>
+        <MudTh>Calories</MudTh>
+        <MudTh>Protein(g)</MudTh>
+        <MudTh>Fat(g)</MudTh>
+        <MudTh>Carbs(g)</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">
+            <MudLink Underline="Underline.None" OnClick="@(() => Details(context.FoodId))">
+                @context.Name
+            </MudLink>
+        </MudTd>
+        <MudTd DataLabel="Sign">@context.Category</MudTd>
+        <MudTd DataLabel="Name">@context.Calories</MudTd>
+        <MudTd DataLabel="Position">@context.Protein</MudTd>
+        <MudTd DataLabel="Molar mass">@context.Fat</MudTd>
+        <MudTd DataLabel="Molar mass">@context.Carbs</MudTd>
+        <MudTd DataLabel="Molar mass">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(() => Edit(context.FoodId))"><i
+                    class="fa-solid fa-pen-to-square"></i></MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Delete(context.FoodId))">
+                <i class="fa-solid fa-trash-can"></i></MudButton>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager/>
+    </PagerContent>
+</MudTable>
 
 @code {
+    public string NameSearch { get; set; } = "";
+    public string CategorySearch { get; set; } = "";
+
     private List<FoodResponse> _foods = [];
-    private string searchString1 = "";
+    private List<FoodResponse> _filteredFoods = [];
 
     protected override async Task OnInitializedAsync()
     {
         _foods = await LoadFoodItems();
+        _filteredFoods = _foods;
     }
 
     private async Task<List<FoodResponse>> LoadFoodItems()
@@ -55,15 +88,67 @@
         return await FoodService.GetAllFood();
     }
 
+    private void OnSearchChanged(string searchBy, string value)
+    {
+        if (searchBy == nameof(NameSearch)) NameSearch = value;
+        else if (searchBy == nameof(CategorySearch)) CategorySearch = value;
+        FilterItems();
+        StateHasChanged();
+    }
+
+    private void FilterItems()
+    {
+        _filteredFoods = _foods
+            .Where(f => string.IsNullOrWhiteSpace(NameSearch) ||
+                        f.Name.Contains(NameSearch, StringComparison.OrdinalIgnoreCase))
+            .Where(f => string.IsNullOrWhiteSpace(CategorySearch) ||
+                        (f.Category ?? string.Empty).Contains(CategorySearch, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private void ClearFilters()
+    {
+        NameSearch = string.Empty;
+        CategorySearch = string.Empty;
+        FilterItems();
+        StateHasChanged();
+    }
+
+    private void Create()
+    {
+        NavigationManager.NavigateTo("/foods/create");
+    }
+
+    private async Task Details(int foodId)
+    {
+        var food = await FoodService.GetFoodById(foodId);
+
+        var parameters = new DialogParameters<FoodDetailsDialogComponent> { { "Food", food } };
+        var dialog = await DialogService.ShowAsync<FoodDetailsDialogComponent>("Details", parameters);
+        var result = await dialog.Result;
+    }
 
     private void Edit(object foodId)
     {
         NavigationManager.NavigateTo($"/foods/edit/{foodId}");
     }
 
-    private void Delete(object foodId)
+    private async Task Delete(int foodId)
     {
-        NavigationManager.NavigateTo($"/foods/delete/{foodId}");
+        var food = await FoodService.GetFoodById(foodId);
+
+        var parameters = new DialogParameters<DeleteFoodDialogComponent> { { "Food", food } };
+        var dialog = await DialogService.ShowAsync<DeleteFoodDialogComponent>("Delete", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await FoodService.DeleteFood(foodId);
+
+            _foods = await LoadFoodItems();
+            FilterItems();
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
 }
