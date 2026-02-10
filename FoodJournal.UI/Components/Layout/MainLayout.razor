@@ -1,49 +1,32 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="bb-page">
+<MudThemeProvider/>
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
-    <Sidebar @ref="sidebar"
-             Title="Food Journal"
-             DataProvider="@SidebarDataProvider"/>
-
-    <main>
-        <div class="bb-top-row px-4 d-flex justify-content-between">
-            <Icon Name="IconName.List" role="button" @onclick="ToggleSidebar"/>
-        </div>
-
-        <article class="content px-4">
-            <div class="py-2">@Body</div>
-        </article>
-    </main>
-
-</div>
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                       OnClick="@(e => DrawerToggle())"/>
+        My Application
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 @code {
-    Sidebar sidebar;
-    IEnumerable<NavItem> navItems;
+    bool _drawerOpen = true;
 
-    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
+    void DrawerToggle()
     {
-        if (navItems is null)
-            navItems = GetNavItems();
-
-        return await Task.FromResult(request.ApplyTo(navItems));
-    }
-
-    private IEnumerable<NavItem> GetNavItems()
-    {
-        navItems = new List<NavItem>
-        {
-            new() { Id = "1", Href = "/", IconName = IconName.HouseDoorFill, Text = "Home", Match = NavLinkMatch.All },
-            new() { Id = "2", Href = "/foods", IconName = IconName.Backpack, Text = "Food" }
-        };
-
-        return navItems;
-    }
-
-    private void ToggleSidebar()
-    {
-        sidebar.ToggleSidebar();
+        _drawerOpen = !_drawerOpen;
     }
 
 }

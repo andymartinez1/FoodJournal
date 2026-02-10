@@ -3,12 +3,13 @@ using FoodJournal.Data;
 using FoodJournal.ServiceContracts;
 using FoodJournal.Services;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
-builder.Services.AddBlazorBootstrap();
+builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IFoodService, FoodService>();
 

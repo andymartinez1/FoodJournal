@@ -24,7 +24,16 @@ public class FoodService : IFoodService
             throw new ArgumentNullException(nameof(foodRequest));
 
         if (_context.FoodItems.Where(f => f.Name == foodRequest.Name).Any())
-            throw new ArgumentException("Food already exists in database.");
+        {
+            _logger.LogWarning(
+                "Attempted to add food that already exists: {FoodName}",
+                foodRequest.Name
+            );
+            var existingFood = await _context.FoodItems.FirstOrDefaultAsync(f =>
+                f.Name == foodRequest.Name
+            );
+            return existingFood.ToFoodResponse();
+        }
 
         var foodItem = foodRequest.ToFoodEntity();
         await _context.AddAsync(foodItem);
@@ -104,7 +113,7 @@ public class FoodService : IFoodService
             Protein = foodResponse.Protein,
             Fat = foodResponse.Fat,
             Carbs = foodResponse.Carbs,
-            Meals = foodResponse.Meals
+            Meals = foodResponse.Meals,
         };
     }
 }

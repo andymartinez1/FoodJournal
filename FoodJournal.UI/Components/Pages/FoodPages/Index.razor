@@ -1,68 +1,53 @@
 ﻿@page "/foods"
 @inject IFoodService FoodService
-@rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Food</PageTitle>
 
-<h1>Food</h1>
 
 <p>
     <a href="foods/create" class="btn btn-primary">Create New</a>
 </p>
 
 <div class="grid">
-    <Grid TItem="FoodResponse"
-          Class="table table-hover table-bordered table-striped"
-          DataProvider="FoodDataProvider"
-          AllowFiltering="true"
-          AllowPaging="true"
-          PageSize="10"
-          AllowSorting="true"
-          Responsive="true">
+    <MudTable Items="@_foods" Hover="true" Breakpoint="Breakpoint.Sm"
+              LoadingProgressColor="Color.Info">
 
-        <GridColumns>
-            <GridColumn TItem="FoodResponse" HeaderText="Name" PropertyName="Name"
-                        SortKeySelector="food => food.Name">
-                @context.Name
-            </GridColumn>
-            <GridColumn TItem="FoodResponse" HeaderText="Category" PropertyName="Category"
-                        SortKeySelector="food => food.Category">
-                @context.Category
-            </GridColumn>
-            <GridColumn TItem="FoodResponse" HeaderText="Calories" PropertyName="Calories"
-                        SortKeySelector="food => food.Calories">
-                @context.Calories
-            </GridColumn>
-            <GridColumn TItem="FoodResponse" HeaderText="Protein(g)" PropertyName="Protein"
-                        SortKeySelector="food => food.Protein">
-                @context.Protein
-            </GridColumn>
-            <GridColumn TItem="FoodResponse" HeaderText="Fat(g)" PropertyName="Fat"
-                        SortKeySelector="food => food.Fat">
-                @context.Fat
-            </GridColumn>
-            <GridColumn TItem="FoodResponse" HeaderText="Carbs(g)" PropertyName="Carbs"
-                        SortKeySelector="food => food.Carbs">
-                @context.Carbs
-            </GridColumn>
-
-        </GridColumns>
-
-    </Grid>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Category</MudTh>
+            <MudTh>Calories</MudTh>
+            <MudTh>Protein(g)</MudTh>
+            <MudTh>Fat(g)</MudTh>
+            <MudTh>Carbs(g)</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.Name</MudTd>
+            <MudTd DataLabel="Sign">@context.Category</MudTd>
+            <MudTd DataLabel="Name">@context.Calories</MudTd>
+            <MudTd DataLabel="Position">@context.Protein</MudTd>
+            <MudTd DataLabel="Molar mass">@context.Fat</MudTd>
+            <MudTd DataLabel="Molar mass">@context.Carbs</MudTd>
+            <MudTd DataLabel="Molar mass">
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary"><i class="fa-solid fa-pen-to-square"></i></MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary"><i class="fa-solid fa-trash-can"></i></MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager/>
+        </PagerContent>
+    </MudTable>
 </div>
 
 @code {
     private List<FoodResponse> _foods = [];
+    private string searchString1 = "";
 
     protected override async Task OnInitializedAsync()
     {
         _foods = await LoadFoodItems();
-    }
-
-    private async Task<GridDataProviderResult<FoodResponse>> FoodDataProvider(GridDataProviderRequest<FoodResponse> request)
-    {
-        return await Task.FromResult(request.ApplyTo(_foods));
     }
 
     private async Task<List<FoodResponse>> LoadFoodItems()
@@ -70,14 +55,10 @@
         return await FoodService.GetAllFood();
     }
 
+
     private void Edit(object foodId)
     {
         NavigationManager.NavigateTo($"/foods/edit/{foodId}");
-    }
-
-    private void Detail(object foodId)
-    {
-        NavigationManager.NavigateTo($"/foods/details/{foodId}");
     }
 
     private void Delete(object foodId)
