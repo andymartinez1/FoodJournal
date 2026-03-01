@@ -1,72 +1,53 @@
 ﻿@page "/foods/create"
+@using FoodJournal.ServiceContracts.DTOs.Food
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
+<EditForm method="post" Model="Food" OnValidSubmit="AddFood" FormName="createFood" Enhance>
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Food name" HelperText="Max. 8 characters"
+                                  @bind-Value="Food.Name" For="@(() => Food.Name)"/>
+                    <MudSelect Label="Category" Class="mt-3"
+                               @bind-Value="Food.Category" For="@(() => Food.Category)">
+                        @foreach (FoodCategory category in Enum.GetValues(typeof(FoodCategory)))
+                        {
+                            <MudSelectItem value="@category">@category</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudTextField Label="Calories" HelperText="" Class="mt-3"
+                                  @bind-Value="Food.Calories" For="@(() => Food.Calories)"/>
+                    <MudTextField Label="Protein(g)" HelperText="" Class="mt-3"
+                                  @bind-Value="Food.Protein" For="@(() => Food.Protein)"/>
+                    <MudTextField Label="Fat(g)" HelperText="" Class="mt-3"
+                                  @bind-Value="Food.Fat" For="@(() => Food.Fat)"/>
+                    <MudTextField Label="Carbs(g)" HelperText="" Class="mt-3"
+                                  @bind-Value="Food.Carbs" For="@(() => Food.Carbs)"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary"
+                               Class="ml-auto" OnClick="@Home">Cancel
+                    </MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                               Class="ml-auto" OnClick="@AddFood">Submit
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
 
-<h2>Food</h2>
-<hr/>
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Food" OnValidSubmit="AddFood" FormName="create" Enhance>
-            <DataAnnotationsValidator/>
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
-                <InputText id="name" @bind-Value="Food.Name" class="form-control"/>
-                <ValidationMessage For="() => Food.Name" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-                <label for="category" class="form-label">Category:</label>
-                <InputSelect id="category" class="form-control" @bind-Value="Food.Category">
-                    @foreach (FoodCategory cat in Enum.GetValues(typeof(FoodCategory)))
-                    {
-                        <option value="@cat">@cat</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="() => Food.Category" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-                <label for="calories" class="form-label">Calories:</label>
-                <InputNumber id="calories" @bind-Value="Food.Calories" class="form-control"/>
-                <ValidationMessage For="() => Food.Calories" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-                <label for="protein" class="form-label">Protein:</label>
-                <InputNumber id="protein" @bind-Value="Food.Protein" class="form-control"/>
-                <ValidationMessage For="() => Food.Protein" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-                <label for="fat" class="form-label">Fat:</label>
-                <InputNumber id="fat" @bind-Value="Food.Fat" class="form-control"/>
-                <ValidationMessage For="() => Food.Fat" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-                <label for="carbs" class="form-label">Carbs:</label>
-                <InputNumber id="carbs" @bind-Value="Food.Carbs" class="form-control"/>
-                <ValidationMessage For="() => Food.Carbs" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-                <label for="meals" class="form-label">Meals:</label>
-                <InputSelect id="meals" @bind-Value="Food.Meals" class="form-control">
-                    @foreach (var meal in Food.Meals)
-                    {
-                        <option value="@meal.Name">@meal.Name</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="() => Food.Meals" class="text-danger"/>
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-            <button class="btn btn-secondary" @onclick="Home">Go Back</button>
-        </EditForm>
-    </div>
-</div>
 
 @code {
     [SupplyParameterFromForm] private AddFoodRequest Food { get; set; } = default!;
+    bool success;
+    string[] errors;
 
     protected override void OnInitialized()
     {

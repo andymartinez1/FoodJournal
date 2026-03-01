@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using FoodJournal.Entities;
 
-namespace FoodJournal.ServiceContracts.DTOs;
+namespace FoodJournal.ServiceContracts.DTOs.Food;
 
 public class FoodResponse
 {
@@ -24,7 +24,7 @@ public class FoodResponse
 
 public static class FoodExtensions
 {
-    public static FoodResponse ToFoodResponse(this Food food)
+    public static FoodResponse ToFoodResponse(this Entities.Food food)
     {
         return new FoodResponse
         {

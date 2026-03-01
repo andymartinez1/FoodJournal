@@ -7,4 +7,8 @@
     <ItemGroup>
         <ProjectReference Include="..\FoodJournal.Entities\FoodJournal.Entities.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="DTOs\FoodMeal\" />
+      <Folder Include="DTOs\Meal\" />
+    </ItemGroup>
 </Project>

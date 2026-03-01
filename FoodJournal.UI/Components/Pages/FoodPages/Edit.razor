@@ -1,103 +1,132 @@
 ﻿@page "/foods/edit/{FoodId:int}"
+@using FoodJournal.ServiceContracts.DTOs.Food
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@rendermode InteractiveServer
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h2>Food</h2>
-<hr/>
-@if (Food is null)
+@if (_loading)
 {
-    <p><em>Loading...</em></p>
+    <p>Loading...</p>
+}
+else if (_notFound)
+{
+    <p>Not found.</p>
 }
 else
 {
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="Food" OnValidSubmit="UpdateFood" FormName="edit" Enhance>
-                <DataAnnotationsValidator/>
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="Food.FoodId" value="@Food.FoodId"/>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" @bind-Value="Food.Name" class="form-control"/>
-                    <ValidationMessage For="() => Food.Name" class="text-danger"/>
-                </div>
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category:</label>
-                    <InputSelect id="category" class="form-control" @bind-Value="Food.Category">
-                        @foreach (FoodCategory cat in Enum.GetValues(typeof(FoodCategory)))
-                        {
-                            <option value="@cat">@cat</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="() => Food.Category" class="text-danger"/>
-                </div>
-                <div class="mb-3">
-                    <label for="calories" class="form-label">Calories:</label>
-                    <InputNumber id="calories" @bind-Value="Food.Calories" class="form-control"/>
-                    <ValidationMessage For="() => Food.Calories" class="text-danger"/>
-                </div>
-                <div class="mb-3">
-                    <label for="protein" class="form-label">Protein:</label>
-                    <InputNumber id="protein" @bind-Value="Food.Protein" class="form-control"/>
-                    <ValidationMessage For="() => Food.Protein" class="text-danger"/>
-                </div>
-                <div class="mb-3">
-                    <label for="fat" class="form-label">Fat:</label>
-                    <InputNumber id="fat" @bind-Value="Food.Fat" class="form-control"/>
-                    <ValidationMessage For="() => Food.Fat" class="text-danger"/>
-                </div>
-                <div class="mb-3">
-                    <label for="carbs" class="form-label">Carbs:</label>
-                    <InputNumber id="carbs" @bind-Value="Food.Carbs" class="form-control"/>
-                    <ValidationMessage For="() => Food.Carbs" class="text-danger"/>
-                </div>
-                <div class="mb-3">
-                    <label for="meals" class="form-label">Meals:</label>
-                    <InputSelect id="meals" @bind-Value="Food.Meals" class="form-control">
-                        @foreach (var meal in Food.Meals)
-                        {
-                            <option value="@meal">@meal</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="() => Food.Meals" class="text-danger"/>
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
-        </div>
-    </div>
-}
+    <EditForm Model="Food" OnValidSubmit="UpdateFood">
+        <DataAnnotationsValidator/>
 
-<div>
-    <a href="/foods">Back to List</a>
-</div>
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                <MudCard>
+                    <MudCardContent>
+                        <MudTextField Label="Food name"
+                                      @bind-Value="Food.Name"
+                                      For="@(() => Food.Name)"/>
+
+                        <MudSelect T="string"
+                                   Label="Category"
+                                   @bind-Value="Food.Category"
+                                   For="@(() => Food.Category)"
+                                   Searchable="true"
+                                   Clearable="true">
+                            @foreach (var category in _existingCategories)
+                            {
+                                <MudSelectItem T="string" Value="@category">@category</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudTextField Label="Calories" Class="mt-3"
+                                      @bind-Value="Food.Calories"
+                                      For="@(() => Food.Calories)"/>
+                        <MudTextField Label="Protein(g)" Class="mt-3"
+                                      @bind-Value="Food.Protein"
+                                      For="@(() => Food.Protein)"/>
+                        <MudTextField Label="Fat(g)" Class="mt-3"
+                                      @bind-Value="Food.Fat"
+                                      For="@(() => Food.Fat)"/>
+                        <MudTextField Label="Carbs(g)" Class="mt-3"
+                                      @bind-Value="Food.Carbs"
+                                      For="@(() => Food.Carbs)"/>
+                    </MudCardContent>
+
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary"
+                                   Class="ml-auto" OnClick="@Home">
+                            Cancel
+                        </MudButton>
+
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled" Color="Color.Primary"
+                                   Class="ml-auto">
+                            Submit
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
 
 @code {
     [Parameter] public int FoodId { get; set; }
 
-    [SupplyParameterFromForm] private UpdateFoodRequest? Food { get; set; }
+    private bool _loading = true;
+    private bool _notFound;
+    private List<string> _existingCategories = [];
+    private UpdateFoodRequest Food { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var food = await FoodService.GetFoodById(FoodId);
+        var foods = await FoodService.GetAllFood(); // or a dedicated "GetCategories" endpoint
+        _existingCategories = foods
+            .Select(f => f.Category)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(c => c)
+            .ToList()!;
+    }
 
-        if (Food is null)
+    protected override async Task OnParametersSetAsync()
+    {
+        _loading = true;
+        _notFound = false;
+
+        var foodResponse = await FoodService.GetFoodById(FoodId);
+        if (foodResponse is null)
         {
-            NavigationManager.NotFound();
+            _notFound = true;
+            _loading = false;
+            return;
         }
+
+        Food = new UpdateFoodRequest
+        {
+            FoodId = foodResponse.FoodId,
+            Name = foodResponse.Name,
+            Category = foodResponse.Category,
+            Calories = foodResponse.Calories,
+            Protein = foodResponse.Protein,
+            Fat = foodResponse.Fat,
+            Carbs = foodResponse.Carbs
+        };
+
+        _loading = false;
     }
 
     private async Task UpdateFood()
     {
-        if (Food is null)
-        {
-            NavigationManager.NotFound();
-            return;
-        }
+        await FoodService.UpdateFood(Food);
+        Snackbar.Add("Food Updated!", Severity.Success);
+        NavigationManager.NavigateTo("/foods");
+    }
 
+    private void Home()
+    {
         NavigationManager.NavigateTo("/foods");
     }
 

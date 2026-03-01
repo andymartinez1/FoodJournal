@@ -1,4 +1,5 @@
 ﻿@page "/foods"
+@using FoodJournal.ServiceContracts.DTOs.Food
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
@@ -48,17 +49,17 @@
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nr">
+        <MudTd DataLabel="Name">
             <MudLink Underline="Underline.None" OnClick="@(() => Details(context.FoodId))">
                 @context.Name
             </MudLink>
         </MudTd>
-        <MudTd DataLabel="Sign">@context.Category</MudTd>
-        <MudTd DataLabel="Name">@context.Calories</MudTd>
-        <MudTd DataLabel="Position">@context.Protein</MudTd>
-        <MudTd DataLabel="Molar mass">@context.Fat</MudTd>
-        <MudTd DataLabel="Molar mass">@context.Carbs</MudTd>
-        <MudTd DataLabel="Molar mass">
+        <MudTd DataLabel="Category">@context.Category</MudTd>
+        <MudTd DataLabel="Calories">@context.Calories</MudTd>
+        <MudTd DataLabel="Protein">@context.Protein</MudTd>
+        <MudTd DataLabel="Fat">@context.Fat</MudTd>
+        <MudTd DataLabel="Carbs">@context.Carbs</MudTd>
+        <MudTd DataLabel="Actions">
             <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(() => Edit(context.FoodId))"><i
                     class="fa-solid fa-pen-to-square"></i></MudButton>
             <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Delete(context.FoodId))">
@@ -128,7 +129,7 @@
         var result = await dialog.Result;
     }
 
-    private void Edit(object foodId)
+    private void Edit(int foodId)
     {
         NavigationManager.NavigateTo($"/foods/edit/{foodId}");
     }

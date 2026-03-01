@@ -1,40 +1,54 @@
-﻿@inject IFoodService FoodService
+﻿@using FoodJournal.ServiceContracts.DTOs.Food
 
-<MudDialog Class="blur dialog-background" TitleClass="blur dialog-background-title"
+<MudDialog Class="blur dialog-background mud-dialog" TitleClass="blur dialog-background-title"
            ContentClass="dialog-background-surface py-10" ActionsClass="dialog-background-surface">
     <TitleContent>
-        <MudText>
-            Details for @Food.Name:
-        </MudText>
+        <div class="dialog-background-title">
+            <MudText>
+                Details for @Food.Name:
+            </MudText>
+        </div>
     </TitleContent>
     <DialogContent>
-        <MudTextField Value="@Food.Name" Label="Name" ReadOnly="true"></MudTextField>
-        <MudTextField Value="@Food.Category" Label="Category" ReadOnly="true"></MudTextField>
-        <MudTextField Value="@Food.Calories" Label="Calories" ReadOnly="true"></MudTextField>
-        <MudTextField Value="@Food.Protein" Label="Protein" ReadOnly="true"></MudTextField>
-        <MudTextField Value="@Food.Fat" Label="Fat" ReadOnly="true"></MudTextField>
-        <MudTextField Value="@Food.Carbs" Label="Carbs" ReadOnly="true"></MudTextField>
+        <div class="dialog-background-surface">
+            <MudTextField Value="@Food.Name" Label="Name" ReadOnly="true"></MudTextField>
+            <MudTextField Value="@Food.Category" Label="Category" ReadOnly="true"></MudTextField>
+            <MudTextField Value="@Food.Calories" Label="Calories" ReadOnly="true"></MudTextField>
+            <MudTextField Value="@Food.Protein" Label="Protein" ReadOnly="true"></MudTextField>
+            <MudTextField Value="@Food.Fat" Label="Fat" ReadOnly="true"></MudTextField>
+            <MudTextField Value="@Food.Carbs" Label="Carbs" ReadOnly="true"></MudTextField>
+
+            <MudDivider Class="my-4" />
+            <MudText Typo="Typo.h6">Appears in meals:</MudText>
+
+            @if (!Food.Meals.Any())
+            {
+                <MudText>No meals found for this ingredient.</MudText>
+            }
+            else
+            {
+                <MudTable Items="Food.Meals" Hover="true" Dense="true">
+                    <HeaderContent>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Type</MudTh>
+                        <MudTh>Calories</MudTh>
+                        <MudTh>Description</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Name">@context.Name</MudTd>
+                        <MudTd DataLabel="Type">@context.MealType</MudTd>
+                        <MudTd DataLabel="Calories">@context.Calories</MudTd>
+                        <MudTd DataLabel="Description">@context.Description</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            }
+        </div>
     </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
-    </DialogActions>
 </MudDialog>
 
 @code {
-    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
-    [Parameter] public FoodResponse Food { get; set; }
-
-    private void Submit()
-    {
-        MudDialog.Close(DialogResult.Ok(true));
-    }
-
-    private void Cancel()
-    {
-        MudDialog.Cancel();
-    }
-
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public FoodResponse Food { get; set; } = default!;
 }
 
 <style>

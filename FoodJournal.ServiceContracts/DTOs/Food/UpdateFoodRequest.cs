@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FoodJournal.Entities;
-using FoodJournal.ServiceContracts.Enums;
 
-namespace FoodJournal.ServiceContracts.DTOs;
+namespace FoodJournal.ServiceContracts.DTOs.Food;
 
 public class UpdateFoodRequest
 {
@@ -12,7 +11,7 @@ public class UpdateFoodRequest
     [Required(ErrorMessage = "Name cannot be empty.")]
     public string Name { get; set; } = string.Empty;
 
-    public FoodCategory Category { get; set; }
+    public string? Category { get; set; }
 
     public int? Calories { get; set; }
 
@@ -24,12 +23,12 @@ public class UpdateFoodRequest
 
     public List<Meal> Meals { get; set; } = [];
 
-    public Food ToFoodEntity()
+    public Entities.Food ToFoodEntity()
     {
-        return new Food
+        return new Entities.Food
         {
             Name = Name,
-            Category = Category.ToString(),
+            Category = Category,
             Calories = Calories,
             Protein = Protein,
             Fat = Fat,

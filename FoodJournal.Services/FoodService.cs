@@ -2,6 +2,7 @@ using FoodJournal.Data;
 using FoodJournal.Entities;
 using FoodJournal.ServiceContracts;
 using FoodJournal.ServiceContracts.DTOs;
+using FoodJournal.ServiceContracts.DTOs.Food;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -32,7 +33,9 @@ public class FoodService : IFoodService
             var existingFood = await _context.FoodItems.FirstOrDefaultAsync(f =>
                 f.Name == foodRequest.Name
             );
-            return existingFood.ToFoodResponse();
+
+            if (existingFood is not null)
+                return existingFood.ToFoodResponse();
         }
 
         var foodItem = foodRequest.ToFoodEntity();
@@ -48,8 +51,11 @@ public class FoodService : IFoodService
         if (foodId is null)
             throw new ArgumentNullException(nameof(foodId));
 
-        var food = await _context.FoodItems.FindAsync(foodId);
-        _logger.LogInformation("Food with ID: {FoodId} retrieved.", food.FoodId);
+        var food = await _context.FoodItems
+            .Include(f => f.Meals)
+            .FirstOrDefaultAsync(f => f.FoodId == foodId);
+
+        _logger.LogInformation("Food with ID: {FoodId} retrieved.", food?.FoodId);
 
         if (food is null)
             return null;
@@ -70,8 +76,11 @@ public class FoodService : IFoodService
 
         var foodToUpdate = await _context.FoodItems.FindAsync(foodRequest.FoodId);
 
+        if (foodToUpdate is null)
+            throw new KeyNotFoundException($"Food with id {foodRequest.FoodId} not found.");
+
         foodToUpdate.Name = foodRequest.Name;
-        foodToUpdate.Category = foodToUpdate.Category;
+        foodToUpdate.Category = foodRequest.Category;
         foodToUpdate.Calories = foodRequest.Calories;
         foodToUpdate.Protein = foodRequest.Protein;
         foodToUpdate.Fat = foodRequest.Fat;

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using FoodJournal.Entities;
 using FoodJournal.ServiceContracts.Enums;
 
-namespace FoodJournal.ServiceContracts.DTOs;
+namespace FoodJournal.ServiceContracts.DTOs.Food;
 
 public class AddFoodRequest
 {
@@ -21,9 +21,9 @@ public class AddFoodRequest
 
     public List<Meal> Meals { get; set; } = [];
 
-    public Food ToFoodEntity()
+    public Entities.Food ToFoodEntity()
     {
-        return new Food
+        return new Entities.Food
         {
             Name = Name,
             Category = Category.ToString(),
