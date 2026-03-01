@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using FoodJournal.Entities;
 using FoodJournal.ServiceContracts.Enums;
 
 namespace FoodJournal.ServiceContracts.DTOs.Food;
@@ -19,7 +18,7 @@ public class AddFoodRequest
 
     [Display(Name = "Carbs(g)")] public double? Carbs { get; set; }
 
-    public List<Meal> Meals { get; set; } = [];
+    public List<int> MealIds { get; set; } = new();
 
     public Entities.Food ToFoodEntity()
     {
@@ -30,8 +29,7 @@ public class AddFoodRequest
             Calories = Calories,
             Protein = Protein,
             Fat = Fat,
-            Carbs = Carbs,
-            Meals = Meals
+            Carbs = Carbs
         };
     }
 }

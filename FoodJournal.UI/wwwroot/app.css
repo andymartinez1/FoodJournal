@@ -1,3 +1,113 @@
+:root {
+    --c-blue-deep: #0B84FF;
+    --c-blue: #3AA0D8;
+    --c-teal: #2DD4BF;
+    --c-sea: #60C5A6;
+    --c-cyan-light: #89D4E4;
+    --action-edit: #FF9A3C;
+    --action-delete: #E02424;
+    --bg-1: #F7FBFF;
+    --bg-2: #FFFFFF;
+    --surface: #ffffff;
+    --muted: #6b7280;
+    --radius: 12px;
+}
+
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #0f172a;
+    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+}
+
+.mud-appbar {
+    background: linear-gradient(90deg, var(--c-blue-deep) 0%, var(--c-blue) 40%, var(--c-teal) 70%, var(--c-cyan-light) 100%);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.mud-card {
+    background: var(--surface) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+    overflow: hidden;
+}
+
+.mud-card .mud-card-content {
+    padding: 1rem 1.25rem;
+}
+
+.mud-button-root,
+.mud-button {
+    border-radius: 10px !important;
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.mud-button-root:hover,
+.mud-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.mud-table thead th,
+.mud-table th {
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.mud-table td {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+a, .mud-link {
+    color: var(--c-blue-deep);
+}
+
+.mud-dialog {
+    border-radius: 14px !important;
+}
+
+.text-muted {
+    color: var(--muted) !important;
+}
+
+.mud-input-root .mud-input-control,
+.mud-select-root .mud-input-control {
+    border-radius: 8px !important;
+}
+
+.btn-edit.mud-button-root,
+.btn-edit.mud-button {
+    color: var(--action-edit) !important;
+    border-color: transparent !important;
+}
+
+.btn-edit.mud-button-root:hover,
+.btn-edit.mud-button:hover {
+    background: color-mix(in srgb, var(--action-edit) 80%, black 20%) !important;
+    transform: translateY(-2px);
+}
+
+.btn-delete.mud-button-root,
+.btn-delete.mud-button {
+    color: var(--action-delete) !important;
+    border-color: transparent !important;
+}
+
+.btn-delete.mud-button-root:hover,
+.btn-delete.mud-button:hover {
+    background: color-mix(in srgb, var(--action-delete) 85%, black 15%) !important;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .mud-card {
+        box-shadow: none !important;
+    }
 }

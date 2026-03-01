@@ -60,9 +60,9 @@
         <MudTd DataLabel="Fat">@context.Fat</MudTd>
         <MudTd DataLabel="Carbs">@context.Carbs</MudTd>
         <MudTd DataLabel="Actions">
-            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(() => Edit(context.FoodId))"><i
+            <MudButton Variant="Variant.Filled" Class="btn-edit" OnClick="@(() => Edit(context.FoodId))"><i
                     class="fa-solid fa-pen-to-square"></i></MudButton>
-            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Delete(context.FoodId))">
+            <MudButton Variant="Variant.Filled" Class="btn-delete" OnClick="@(() => Delete(context.FoodId))">
                 <i class="fa-solid fa-trash-can"></i></MudButton>
         </MudTd>
     </RowTemplate>
@@ -75,8 +75,8 @@
     public string NameSearch { get; set; } = "";
     public string CategorySearch { get; set; } = "";
 
-    private List<FoodResponse> _foods = [];
-    private List<FoodResponse> _filteredFoods = [];
+    private List<FoodResponse> _foods = new();
+    private List<FoodResponse> _filteredFoods = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,7 +86,7 @@
 
     private async Task<List<FoodResponse>> LoadFoodItems()
     {
-        return await FoodService.GetAllFood();
+        return await FoodService.GetAllFoodAsync();
     }
 
     private void OnSearchChanged(string searchBy, string value)
@@ -122,7 +122,7 @@
 
     private async Task Details(int foodId)
     {
-        var food = await FoodService.GetFoodById(foodId);
+        var food = await FoodService.GetFoodByIdAsync(foodId);
 
         var parameters = new DialogParameters<FoodDetailsDialogComponent> { { "Food", food } };
         var dialog = await DialogService.ShowAsync<FoodDetailsDialogComponent>("Details", parameters);
@@ -136,7 +136,7 @@
 
     private async Task Delete(int foodId)
     {
-        var food = await FoodService.GetFoodById(foodId);
+        var food = await FoodService.GetFoodByIdAsync(foodId);
 
         var parameters = new DialogParameters<DeleteFoodDialogComponent> { { "Food", food } };
         var dialog = await DialogService.ShowAsync<DeleteFoodDialogComponent>("Delete", parameters);
@@ -144,7 +144,7 @@
 
         if (!result.Canceled)
         {
-            await FoodService.DeleteFood(foodId);
+            await FoodService.DeleteFoodAsync(foodId);
 
             _foods = await LoadFoodItems();
             FilterItems();

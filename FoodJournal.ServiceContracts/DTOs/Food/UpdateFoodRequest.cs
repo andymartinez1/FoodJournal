@@ -21,7 +21,7 @@ public class UpdateFoodRequest
 
     public double? Carbs { get; set; }
 
-    public List<Meal> Meals { get; set; } = [];
+    public List<int> MealIds { get; set; } = new();
 
     public Entities.Food ToFoodEntity()
     {
@@ -33,7 +33,7 @@ public class UpdateFoodRequest
             Protein = Protein,
             Fat = Fat,
             Carbs = Carbs,
-            Meals = Meals
+            Meals = new List<Meal>()
         };
     }
 }

@@ -1,4 +1,5 @@
 ﻿@page "/foods/create"
+@using FoodJournal.Entities
 @using FoodJournal.ServiceContracts.DTOs.Food
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
@@ -21,6 +22,15 @@
                             <MudSelectItem value="@category">@category</MudSelectItem>
                         }
                     </MudSelect>
+
+                    <MudSelect T="int" Label="Appears in meals" Class="mt-3" MultiSelection="true"
+                               SelectedValues="_selectedMealIds" SelectedValuesChanged="OnSelectedMealsChanged">
+                        @foreach (var m in _meals)
+                        {
+                            <MudSelectItem Value="@m.MealId">@m.Name (@m.MealType)</MudSelectItem>
+                        }
+                    </MudSelect>
+
                     <MudTextField Label="Calories" HelperText="" Class="mt-3"
                                   @bind-Value="Food.Calories" For="@(() => Food.Calories)"/>
                     <MudTextField Label="Protein(g)" HelperText="" Class="mt-3"
@@ -35,7 +45,7 @@
                                Class="ml-auto" OnClick="@Home">Cancel
                     </MudButton>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
-                               Class="ml-auto" OnClick="@AddFood">Submit
+                               Class="ml-auto">Submit
                     </MudButton>
                 </MudCardActions>
             </MudCard>
@@ -45,18 +55,29 @@
 
 
 @code {
-    [SupplyParameterFromForm] private AddFoodRequest Food { get; set; } = default!;
+    [SupplyParameterFromForm] private AddFoodRequest Food { get; set; } = new();
+    private List<Meal> _meals = new();
+    private IEnumerable<int> _selectedMealIds = Enumerable.Empty<int>();
     bool success;
-    string[] errors;
+    string[] errors = Array.Empty<string>();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Food = new AddFoodRequest();
+        _meals = await FoodService.GetAllMealsAsync();
+    }
+
+    private Task OnSelectedMealsChanged(IEnumerable<int> values)
+    {
+        _selectedMealIds = values ?? Enumerable.Empty<int>();
+        return Task.CompletedTask;
     }
 
     private async Task AddFood()
     {
-        await FoodService.AddFood(Food);
+        Food.MealIds = _selectedMealIds?.ToList() ?? new List<int>();
+
+        await FoodService.AddFoodAsync(Food);
 
         NavigationManager.NavigateTo("/foods");
     }

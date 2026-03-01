@@ -77,12 +77,12 @@ else
 
     private bool _loading = true;
     private bool _notFound;
-    private List<string> _existingCategories = [];
+    private List<string> _existingCategories = new();
     private UpdateFoodRequest Food { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var foods = await FoodService.GetAllFood(); // or a dedicated "GetCategories" endpoint
+        var foods = await FoodService.GetAllFoodAsync(); // or a dedicated "GetCategories" endpoint
         _existingCategories = foods
             .Select(f => f.Category)
             .Where(c => !string.IsNullOrWhiteSpace(c))
@@ -96,7 +96,7 @@ else
         _loading = true;
         _notFound = false;
 
-        var foodResponse = await FoodService.GetFoodById(FoodId);
+        var foodResponse = await FoodService.GetFoodByIdAsync(FoodId);
         if (foodResponse is null)
         {
             _notFound = true;
@@ -112,7 +112,8 @@ else
             Calories = foodResponse.Calories,
             Protein = foodResponse.Protein,
             Fat = foodResponse.Fat,
-            Carbs = foodResponse.Carbs
+            Carbs = foodResponse.Carbs,
+            MealIds = foodResponse.Meals?.Select(m => m.MealId).ToList() ?? new List<int>()
         };
 
         _loading = false;
@@ -120,7 +121,7 @@ else
 
     private async Task UpdateFood()
     {
-        await FoodService.UpdateFood(Food);
+        await FoodService.UpdateFoodAsync(Food);
         Snackbar.Add("Food Updated!", Severity.Success);
         NavigationManager.NavigateTo("/foods");
     }

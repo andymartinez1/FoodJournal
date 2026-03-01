@@ -5,15 +5,15 @@ namespace FoodJournal.ServiceContracts;
 
 public interface IFoodService
 {
-    public Task<FoodResponse> AddFood(AddFoodRequest? foodRequest);
+    public Task<FoodResponse> AddFoodAsync(AddFoodRequest? foodRequest);
 
-    public Task<FoodResponse?> GetFoodById(int? foodId);
+    public Task<FoodResponse?> GetFoodByIdAsync(int? foodId);
 
-    public Task<List<FoodResponse>> GetAllFood();
+    public Task<List<FoodResponse>> GetAllFoodAsync();
 
-    public Task<FoodResponse?> UpdateFood(UpdateFoodRequest? foodRequest);
+    public Task<FoodResponse?> UpdateFoodAsync(UpdateFoodRequest? foodRequest);
 
-    public Task<bool> DeleteFood(int? foodId);
+    public Task<bool> DeleteFoodAsync(int? foodId);
 
-    public Task<Food> ConvertToFoodEntity(FoodResponse foodResponse);
+    public Task<List<Meal>> GetAllMealsAsync();
 }

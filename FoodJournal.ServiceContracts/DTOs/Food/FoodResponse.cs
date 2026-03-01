@@ -19,7 +19,7 @@ public class FoodResponse
 
     public double? Carbs { get; set; }
 
-    public List<Meal> Meals { get; set; } = [];
+    public List<Meal> Meals { get; set; } = new();
 }
 
 public static class FoodExtensions

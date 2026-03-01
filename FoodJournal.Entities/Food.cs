@@ -16,5 +16,5 @@ public class Food
 
     public double? Carbs { get; set; }
 
-    public List<Meal> Meals { get; set; } = [];
+    public List<Meal> Meals { get; set; } = new();
 }
