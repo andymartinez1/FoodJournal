@@ -1,9 +1,9 @@
-namespace FoodJournal.Entities;
+using FoodJournal.Entities;
 
-public class Meal
+namespace FoodJournal.ServiceContracts.DTOs.MealDTOs;
+
+public class AddMealRequest
 {
-    public int MealId { get; set; }
-
     public string Name { get; set; } = string.Empty;
 
     public string? Description { get; set; }
@@ -24,13 +24,7 @@ public class Meal
 
     public DateOnly LastDayEaten { get; set; }
 
-    public List<Food> Ingredients { get; set; } = new();
-}
+    public List<int> IngredientIds { get; set; } = new();
 
-public enum MealType
-{
-    Breakfast,
-    Lunch,
-    Dinner,
-    Snack
+    public List<Food> Ingredients { get; set; } = new();
 }

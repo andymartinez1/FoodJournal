@@ -1,5 +1,5 @@
 using FoodJournal.Entities;
-using FoodJournal.ServiceContracts.DTOs.Food;
+using FoodJournal.ServiceContracts.DTOs.FoodDTOs;
 
 namespace FoodJournal.ServiceContracts;
 

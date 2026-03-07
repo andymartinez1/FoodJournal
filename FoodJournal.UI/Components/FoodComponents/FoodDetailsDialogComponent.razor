@@ -1,5 +1,4 @@
-﻿@using FoodJournal.ServiceContracts.DTOs.Food
-
+﻿@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
 <MudDialog Class="blur dialog-background mud-dialog" TitleClass="blur dialog-background-title"
            ContentClass="dialog-background-surface py-10" ActionsClass="dialog-background-surface">
     <TitleContent>
@@ -18,7 +17,7 @@
             <MudTextField Value="@Food.Fat" Label="Fat" ReadOnly="true"></MudTextField>
             <MudTextField Value="@Food.Carbs" Label="Carbs" ReadOnly="true"></MudTextField>
 
-            <MudDivider Class="my-4" />
+            <MudDivider Class="my-4"/>
             <MudText Typo="Typo.h6">Appears in meals:</MudText>
 
             @if (!Food.Meals.Any())

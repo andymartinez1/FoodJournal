@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FoodJournal.Entities;
 
-namespace FoodJournal.ServiceContracts.DTOs.Food;
+namespace FoodJournal.ServiceContracts.DTOs.FoodDTOs;
 
 public class UpdateFoodRequest
 {
@@ -23,17 +23,5 @@ public class UpdateFoodRequest
 
     public List<int> MealIds { get; set; } = new();
 
-    public Entities.Food ToFoodEntity()
-    {
-        return new Entities.Food
-        {
-            Name = Name,
-            Category = Category,
-            Calories = Calories,
-            Protein = Protein,
-            Fat = Fat,
-            Carbs = Carbs,
-            Meals = new List<Meal>()
-        };
-    }
+    public List<Meal> Meals { get; set; }
 }

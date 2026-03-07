@@ -1,7 +1,7 @@
 using FoodJournal.Data;
 using FoodJournal.Entities;
 using FoodJournal.ServiceContracts;
-using FoodJournal.ServiceContracts.DTOs.Food;
+using FoodJournal.ServiceContracts.DTOs.FoodDTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -27,18 +27,10 @@ public class FoodService : IFoodService
             _logger.LogWarning("Attempted to add food that already exists: {FoodName}", foodRequest.Name);
             var existingFood = await _context.FoodItems.FirstOrDefaultAsync(f => f.Name == foodRequest.Name);
             if (existingFood is not null)
-                return existingFood.ToFoodResponse();
+                return MapToFoodResponse(existingFood);
         }
 
-        var foodItem = new Food
-        {
-            Name = foodRequest.Name,
-            Category = foodRequest.Category.ToString(),
-            Calories = foodRequest.Calories,
-            Protein = foodRequest.Protein,
-            Fat = foodRequest.Fat,
-            Carbs = foodRequest.Carbs
-        };
+        var foodItem = MapToFoodEntity(foodRequest);
 
         if (foodRequest.MealIds?.Any() == true)
         {
@@ -54,43 +46,54 @@ public class FoodService : IFoodService
         }
 
         await _context.AddAsync(foodItem);
-        _logger.LogInformation("Food successfully added with ID: {foodId}.", foodItem.FoodId);
-        await _context.SaveChangesAsync();
 
-        return foodItem.ToFoodResponse();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "Concurrency conflict while adding category.");
+            return MapToFoodResponse(foodItem);
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Database update failed while adding category.");
+            return MapToFoodResponse(foodItem);
+        }
+
+        _logger.LogInformation("Food with ID: {id} added.", foodItem.FoodId);
+        return MapToFoodResponse(foodItem);
     }
 
     public async Task<FoodResponse?> GetFoodByIdAsync(int? foodId)
     {
-        if (foodId is null)
-            throw new ArgumentNullException(nameof(foodId));
+        ArgumentNullException.ThrowIfNull(foodId);
 
         var food = await _context.FoodItems
             .Include(f => f.Meals)
             .AsNoTracking()
             .FirstOrDefaultAsync(f => f.FoodId == foodId);
 
-        _logger.LogInformation("Food with ID: {FoodId} retrieved.", food?.FoodId);
-
         if (food is null)
             return null;
 
-        return food.ToFoodResponse();
+        _logger.LogInformation("Food with ID: {FoodId} retrieved.", food?.FoodId);
+        return MapToFoodResponse(food);
     }
 
     public async Task<List<FoodResponse>> GetAllFoodAsync()
     {
         var foodList = await _context.FoodItems
             .AsNoTracking()
-            .Select(f => f.ToFoodResponse())
             .ToListAsync();
-        return foodList;
+
+        return foodList.Select(MapToFoodResponse).ToList();
     }
 
     public async Task<FoodResponse?> UpdateFoodAsync(UpdateFoodRequest? foodRequest)
     {
-        if (foodRequest is null)
-            throw new ArgumentNullException(nameof(foodRequest));
+        ArgumentNullException.ThrowIfNull(foodRequest);
 
         var foodToUpdate = await _context.FoodItems.FindAsync(foodRequest.FoodId);
 
@@ -103,6 +106,7 @@ public class FoodService : IFoodService
         foodToUpdate.Protein = foodRequest.Protein;
         foodToUpdate.Fat = foodRequest.Fat;
         foodToUpdate.Carbs = foodRequest.Carbs;
+        foodToUpdate.Meals = foodRequest.Meals;
 
         if (foodRequest.MealIds?.Any() == true)
         {
@@ -112,7 +116,7 @@ public class FoodService : IFoodService
 
             var missing = foodRequest.MealIds.Except(meals.Select(m => m.MealId)).ToList();
             if (missing.Any())
-                _logger.LogWarning("Some MealIds were not found while updating food: {Missing}", missing);
+                _logger.LogWarning("Some Meal IDs were not found while updating food: {Missing}", missing);
 
             foodToUpdate.Meals = meals;
         }
@@ -122,16 +126,29 @@ public class FoodService : IFoodService
         }
 
         _context.FoodItems.Update(foodToUpdate);
-        _logger.LogInformation("Food with ID: {foodId} updated.", foodToUpdate.FoodId);
-        await _context.SaveChangesAsync();
 
-        return foodToUpdate.ToFoodResponse();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "Concurrency conflict while adding category.");
+            return MapToFoodResponse(foodToUpdate);
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Database update failed while adding category.");
+            return MapToFoodResponse(foodToUpdate);
+        }
+
+        _logger.LogInformation("Food with ID: {foodId} updated.", foodToUpdate.FoodId);
+        return MapToFoodResponse(foodToUpdate);
     }
 
     public async Task<bool> DeleteFoodAsync(int? foodId)
     {
-        if (foodId is null)
-            throw new ArgumentNullException(nameof(foodId));
+        ArgumentNullException.ThrowIfNull(foodId);
 
         var food = await _context.FoodItems.FindAsync(foodId);
 
@@ -139,14 +156,57 @@ public class FoodService : IFoodService
             return false;
 
         _context.Remove(food);
-        _logger.LogInformation("Food with ID: {foodId} deleted.", food.FoodId);
-        await _context.SaveChangesAsync();
 
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogWarning(ex, "Concurrency conflict while adding category.");
+            return false;
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Database update failed while adding category.");
+            return false;
+        }
+
+        _logger.LogInformation("Food with ID: {foodId} deleted.", food.FoodId);
         return true;
     }
 
     public async Task<List<Meal>> GetAllMealsAsync()
     {
         return await _context.Meals.AsNoTracking().ToListAsync();
+    }
+
+    private static FoodResponse MapToFoodResponse(Food food)
+    {
+        return new FoodResponse
+        {
+            FoodId = food.FoodId,
+            Name = food.Name,
+            Category = food.Category,
+            Calories = food.Calories,
+            Protein = food.Protein,
+            Fat = food.Fat,
+            Carbs = food.Carbs,
+            Meals = food.Meals
+        };
+    }
+
+    private static Food MapToFoodEntity(AddFoodRequest request)
+    {
+        return new Food
+        {
+            Name = request.Name,
+            Category = request.Category.ToString(),
+            Calories = request.Calories,
+            Protein = request.Protein,
+            Fat = request.Fat,
+            Carbs = request.Carbs,
+            Meals = request.Meals
+        };
     }
 }
