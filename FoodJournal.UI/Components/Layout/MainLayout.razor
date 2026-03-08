@@ -9,7 +9,7 @@
     <MudAppBar Elevation="2">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
                        OnClick="@(e => DrawerToggle())"/>
-        Food Journal &nbsp; <i class="fa-solid fa-burger"></i>
+        <span class="app-title">Food Journal &nbsp; <i class="fa-solid fa-burger"></i></span>
     </MudAppBar>
     <MudDrawer ClipMode="DrawerClipMode.Always" Elevation="0" @bind-Open="@_drawerOpen">
         <NavMenu/>
@@ -34,5 +34,12 @@
 <style>
     .mud-appbar {
         background-color: #6873fe;
+    }
+
+    .app-title {
+        font-size: 24px;
+        font-weight: 600;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.5px;
     }
 </style>

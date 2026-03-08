@@ -69,6 +69,10 @@ a, .mud-link {
     color: var(--c-blue-deep);
 }
 
+.mud-card {
+    margin-top: 3rem !important;
+}
+
 .mud-dialog {
     border-radius: 14px !important;
 }
@@ -91,6 +95,7 @@ a, .mud-link {
 .btn-edit.mud-button-root:hover,
 .btn-edit.mud-button:hover {
     background: color-mix(in srgb, var(--action-edit) 80%, black 20%) !important;
+    color: #fff;
     transform: translateY(-2px);
 }
 
@@ -103,6 +108,7 @@ a, .mud-link {
 .btn-delete.mud-button-root:hover,
 .btn-delete.mud-button:hover {
     background: color-mix(in srgb, var(--action-delete) 85%, black 15%) !important;
+    color: #fff;
     transform: translateY(-2px);
 }
 

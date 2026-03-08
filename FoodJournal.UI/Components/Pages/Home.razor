@@ -1,6 +1,238 @@
 ﻿@page "/"
-<h3>Home</h3>
+
+<div class="home-container">
+    <div class="welcome-section">
+        <h1>Welcome to Your Food Journal</h1>
+        <p>Track your meals and discover your eating patterns</p>
+    </div>
+
+    <div class="quick-actions">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large"
+                   StartIcon="@Icons.Material.Filled.Add" Class="action-btn">
+            New Food Item
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Large"
+                   StartIcon="@Icons.Material.Filled.DinnerDining" Class="action-btn">
+            New Meal
+        </MudButton>
+    </div>
+
+    <div class="stats-section">
+        <MudCard Class="stat-card">
+            <MudCardContent>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Meals This Week</div>
+            </MudCardContent>
+        </MudCard>
+        <MudCard Class="stat-card">
+            <MudCardContent>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Favorite Meals</div>
+            </MudCardContent>
+        </MudCard>
+        <MudCard Class="stat-card">
+            <MudCardContent>
+                <div class="stat-value">156</div>
+                <div class="stat-label">Total Items Logged</div>
+            </MudCardContent>
+        </MudCard>
+    </div>
+
+    <h2 class="section-title">Your Favorite Meals</h2>
+    <div class="meals-grid">
+        <MudCard Class="meal-card">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Grilled Salmon</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body2">Eaten 8 times</MudText>
+                <MudText Typo="Typo.caption" Class="meal-frequency">Last eaten: 2 days ago</MudText>
+            </MudCardContent><MudCardActions>
+                <MudButton Color="Color.Primary">View</MudButton>
+                <MudButton Color="Color.Default">Edit</MudButton>
+            </MudCardActions>
+        </MudCard>
+
+        <MudCard Class="meal-card">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Caesar Salad</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.FavoriteBorder" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body2">Eaten 5 times</MudText>
+                <MudText Typo="Typo.caption" Class="meal-frequency">Last eaten: 1 week ago</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Color="Color.Primary">View</MudButton>
+                <MudButton Color="Color.Default">Edit</MudButton>
+            </MudCardActions>
+        </MudCard>
+
+        <MudCard Class="meal-card">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Spaghetti</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body2">Eaten 12 times</MudText>
+                <MudText Typo="Typo.caption" Class="meal-frequency">Last eaten: Today</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Color="Color.Primary">View</MudButton>
+                <MudButton Color="Color.Default">Edit</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </div>
+
+    <h2 class="section-title">Recent Entries</h2>
+    <MudTable Items="@recentEntries" Hover="true" Breakpoint="Breakpoint.Sm" Class="recent-table">
+        <HeaderContent>
+            <MudTh>Item</MudTh>
+            <MudTh>Date</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Item">@context.Name</MudTd>
+            <MudTd DataLabel="Date">@context.Date.ToShortDateString()</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</div>
+
+<style>
+    .home-container {
+        padding: 32px 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .welcome-section {
+        margin-bottom: 40px;
+    }
+
+    .welcome-section h1 {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+    }
+
+    .welcome-section p {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 12px 32px !important;
+        border-radius: 8px !important;
+        font-weight: 600;
+    }
+
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card :deep(.mud-card-content) {
+        text-align: center;
+        color: white;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+        opacity: 0.95;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        margin-top: 32px;
+        color: #1a1a1a;
+    }
+
+    .meals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .meal-card {
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .meal-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .meal-frequency {
+        color: #999;
+        margin-top: 4px;
+    }
+
+    .recent-table {
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+</style>
 
 @code {
+    private List<RecentEntry> recentEntries = new();
 
+    protected override void OnInitialized()
+    {
+        recentEntries = new List<RecentEntry>
+        {
+            new() { Name = "Chicken Breast", Date = DateTime.Now },
+            new() { Name = "Brown Rice", Date = DateTime.Now.AddHours(-2) },
+            new() { Name = "Broccoli", Date = DateTime.Now.AddDays(-1) }
+        };
+    }
+
+    public class RecentEntry
+    {
+        public string Name { get; set; }
+        public DateTime Date { get; set; }
+    }
 }
