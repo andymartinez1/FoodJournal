@@ -2,6 +2,7 @@
 @using FoodJournal.Entities
 @using FoodJournal.ServiceContracts.DTOs.FoodDTOs
 @inject IFoodService FoodService
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
@@ -76,9 +77,8 @@
     private async Task AddFood()
     {
         Food.MealIds = _selectedMealIds?.ToList() ?? new List<int>();
-
         await FoodService.AddFoodAsync(Food);
-
+        Snackbar.Add($"{Food.Name} added successfully!", Severity.Success);
         NavigationManager.NavigateTo("/foods");
     }
 

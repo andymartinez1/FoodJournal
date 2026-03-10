@@ -1214,6 +1214,7 @@ public static class SeedDatabase
             TimesEaten = 3,
             IsFavorite = true,
             LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-5)),
+            ImagePath = "/img/chicken-stir-fry.jpg",
             Ingredients = new List<Food> { chicken, broccoli, brownRice, peanutButter }
         };
 

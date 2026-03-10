@@ -95,10 +95,12 @@ public class FoodService : IFoodService
     {
         ArgumentNullException.ThrowIfNull(foodRequest);
 
-        var foodToUpdate = await _context.FoodItems.FindAsync(foodRequest.FoodId);
+        var foodToUpdate = await _context.FoodItems.Include(f => f.Meals)
+            .FirstOrDefaultAsync(f => f.FoodId == foodRequest.FoodId);
 
         if (foodToUpdate is null)
             throw new KeyNotFoundException($"Food with id {foodRequest.FoodId} not found.");
+
 
         foodToUpdate.Name = foodRequest.Name;
         foodToUpdate.Category = foodRequest.Category;

@@ -3,6 +3,7 @@
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 @rendermode InteractiveServer
 
 <PageTitle>Food</PageTitle>
@@ -145,6 +146,7 @@
         if (!result.Canceled)
         {
             await FoodService.DeleteFoodAsync(foodId);
+            Snackbar.Add($"Food with ID:{foodId} deleted successfully!", Severity.Success);
 
             _foods = await LoadFoodItems();
             FilterItems();

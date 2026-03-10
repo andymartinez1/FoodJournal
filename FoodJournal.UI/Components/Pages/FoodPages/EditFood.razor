@@ -122,7 +122,7 @@ else
     private async Task UpdateFood()
     {
         await FoodService.UpdateFoodAsync(Food);
-        Snackbar.Add("Food Updated!", Severity.Success);
+        Snackbar.Add($"{Food.Name} updated successfully!", Severity.Success);
         NavigationManager.NavigateTo("/foods");
     }
 

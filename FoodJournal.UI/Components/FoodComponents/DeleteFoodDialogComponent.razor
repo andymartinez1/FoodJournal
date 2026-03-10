@@ -1,6 +1,4 @@
 ﻿@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
-@inject ISnackbar Snackbar
-
 <MudDialog>
     <TitleContent>
         <MudText>
@@ -28,7 +26,6 @@
 
     private void Delete()
     {
-        Snackbar.Add("Food Deleted", Severity.Success);
         MudDialog.Close(DialogResult.Ok(true));
     }
 
