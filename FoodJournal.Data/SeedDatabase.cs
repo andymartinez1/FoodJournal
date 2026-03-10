@@ -1190,15 +1190,18 @@ public static class SeedDatabase
         var grilledChicken = new Meal
         {
             Name = "Grilled Chicken with Broccoli and Rice",
-            Description =
-                "A healthy meal with grilled chicken breast, steamed broccoli, and brown rice.",
+            Description = "A healthy meal with grilled chicken breast, steamed broccoli, and brown rice.",
             MealType = MealType.Lunch,
             Calories = 436,
             Protein = 39.7,
             Fat = 6,
             Carbs = 56.2,
+            TimesEaten = 5,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-2)),
             Ingredients = new List<Food> { chicken, broccoli, brownRice }
         };
+
         var chickenStirFry = new Meal
         {
             Name = "Chicken Stir Fry",
@@ -1208,8 +1211,12 @@ public static class SeedDatabase
             Protein = 40,
             Fat = 10,
             Carbs = 60,
+            TimesEaten = 3,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-5)),
             Ingredients = new List<Food> { chicken, broccoli, brownRice, peanutButter }
         };
+
         var salmonBowl = new Meal
         {
             Name = "Salmon Quinoa Bowl",
@@ -1219,8 +1226,12 @@ public static class SeedDatabase
             Protein = 35,
             Fat = 22,
             Carbs = 45,
+            TimesEaten = 4,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-3)),
             Ingredients = new List<Food> { salmon, quinoa, avocado, spinach }
         };
+
         var proteinBreakfast = new Meal
         {
             Name = "Protein Breakfast",
@@ -1230,20 +1241,27 @@ public static class SeedDatabase
             Protein = 43,
             Fat = 12,
             Carbs = 45,
+            TimesEaten = 8,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-1)),
             Ingredients = new List<Food> { egg, oatmeal, greekYogurt, banana }
         };
+
         var veganTofuBowl = new Meal
         {
             Name = "Vegan Tofu Bowl",
-            Description =
-                "Roasted sweet potato, quinoa, tofu, and spinach for a balanced vegan bowl.",
+            Description = "Roasted sweet potato, quinoa, tofu, and spinach for a balanced vegan bowl.",
             MealType = MealType.Lunch,
             Calories = 520,
             Protein = 28,
             Fat = 14,
             Carbs = 70,
+            TimesEaten = 2,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-10)),
             Ingredients = new List<Food> { tofu, quinoa, sweetPotato, spinach }
         };
+
         var snackPlate = new Meal
         {
             Name = "Snack Plate",
@@ -1253,8 +1271,12 @@ public static class SeedDatabase
             Protein = 17.5,
             Fat = 26.6,
             Carbs = 30.4,
+            TimesEaten = 6,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now),
             Ingredients = new List<Food> { almonds100g, apple, cottageCheese }
         };
+
         var turkeyWrap = new Meal
         {
             Name = "Turkey Wrap",
@@ -1264,8 +1286,12 @@ public static class SeedDatabase
             Protein = 35,
             Fat = 8,
             Carbs = 35,
+            TimesEaten = 7,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-4)),
             Ingredients = new List<Food> { turkey, wholeWheatBread, lettuce, tomato, hummus }
         };
+
         var shrimpTacos = new Meal
         {
             Name = "Shrimp Tacos",
@@ -1275,8 +1301,12 @@ public static class SeedDatabase
             Protein = 30,
             Fat = 15,
             Carbs = 40,
+            TimesEaten = 3,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-7)),
             Ingredients = new List<Food> { shrimp, cornTortilla, guacamole, salsa, bellPepper }
         };
+
         var beefStirFry = new Meal
         {
             Name = "Beef Stir Fry",
@@ -1286,8 +1316,12 @@ public static class SeedDatabase
             Protein = 35,
             Fat = 18,
             Carbs = 65,
+            TimesEaten = 4,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-6)),
             Ingredients = new List<Food> { beef, whiteRice, broccoli, bellPepper, soysauce }
         };
+
         var tunaSalad = new Meal
         {
             Name = "Tuna Salad",
@@ -1297,8 +1331,12 @@ public static class SeedDatabase
             Protein = 32,
             Fat = 8,
             Carbs = 18,
+            TimesEaten = 5,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-8)),
             Ingredients = new List<Food> { tuna, lettuce, tomato, cucumber, balsamic }
         };
+
         var veggiePizza = new Meal
         {
             Name = "Veggie Pizza",
@@ -1308,8 +1346,12 @@ public static class SeedDatabase
             Protein = 22,
             Fat = 20,
             Carbs = 65,
+            TimesEaten = 2,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-15)),
             Ingredients = new List<Food> { wholeWheatBread, mozzarella, mushrooms, bellPepper, tomato }
         };
+
         var greekSalad = new Meal
         {
             Name = "Greek Salad",
@@ -1319,8 +1361,12 @@ public static class SeedDatabase
             Protein = 12,
             Fat = 22,
             Carbs = 20,
+            TimesEaten = 6,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-3)),
             Ingredients = new List<Food> { fetaCheese, cucumber, tomato, oliveoil, lettuce }
         };
+
         var pancakeBreakfast = new Meal
         {
             Name = "Pancake Breakfast",
@@ -1330,8 +1376,12 @@ public static class SeedDatabase
             Protein = 12,
             Fat = 8,
             Carbs = 80,
+            TimesEaten = 1,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-20)),
             Ingredients = new List<Food> { wholeWheatBread, egg, milk, mapleSyrup, strawberries }
         };
+
         var burritoBowl = new Meal
         {
             Name = "Burrito Bowl",
@@ -1341,8 +1391,12 @@ public static class SeedDatabase
             Protein = 45,
             Fat = 18,
             Carbs = 70,
+            TimesEaten = 9,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now),
             Ingredients = new List<Food> { chicken, brownRice, blackBeans, guacamole, salsa }
         };
+
         var lentilSoup = new Meal
         {
             Name = "Lentil Soup",
@@ -1352,8 +1406,12 @@ public static class SeedDatabase
             Protein = 22,
             Fat = 3,
             Carbs = 58,
+            TimesEaten = 3,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-12)),
             Ingredients = new List<Food> { lentils, carrots, kale, onion, garlic }
         };
+
         var eggSandwich = new Meal
         {
             Name = "Egg Sandwich",
@@ -1363,8 +1421,12 @@ public static class SeedDatabase
             Protein = 24,
             Fat = 16,
             Carbs = 35,
+            TimesEaten = 4,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-2)),
             Ingredients = new List<Food> { egg, wholeWheatBread, cheddarCheese, butter }
         };
+
         var baconBreakfast = new Meal
         {
             Name = "Bacon and Eggs",
@@ -1374,8 +1436,12 @@ public static class SeedDatabase
             Protein = 28,
             Fat = 26,
             Carbs = 32,
+            TimesEaten = 7,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-1)),
             Ingredients = new List<Food> { bacon, egg, wholeWheatBread, butter }
         };
+
         var proteinSmoothie = new Meal
         {
             Name = "Protein Smoothie",
@@ -1385,8 +1451,12 @@ public static class SeedDatabase
             Protein = 32,
             Fat = 6,
             Carbs = 35,
+            TimesEaten = 10,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now),
             Ingredients = new List<Food> { proteinPowder, banana, greekYogurt }
         };
+
         var chickenCaesarSalad = new Meal
         {
             Name = "Chicken Caesar Salad",
@@ -1396,8 +1466,12 @@ public static class SeedDatabase
             Protein = 38,
             Fat = 22,
             Carbs = 18,
+            TimesEaten = 5,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-9)),
             Ingredients = new List<Food> { chicken, lettuce, parmesan, oliveoil }
         };
+
         var pastaBolognese = new Meal
         {
             Name = "Pasta Bolognese",
@@ -1407,8 +1481,12 @@ public static class SeedDatabase
             Protein = 36,
             Fat = 18,
             Carbs = 68,
+            TimesEaten = 6,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-5)),
             Ingredients = new List<Food> { pasta, beef, tomato, onion, garlic }
         };
+
         var fishAndChips = new Meal
         {
             Name = "Baked Cod and Sweet Potato",
@@ -1418,8 +1496,12 @@ public static class SeedDatabase
             Protein = 32,
             Fat = 8,
             Carbs = 50,
+            TimesEaten = 2,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-14)),
             Ingredients = new List<Food> { cod, sweetPotato, oliveoil }
         };
+
         var veggieBurger = new Meal
         {
             Name = "Veggie Burger",
@@ -1429,8 +1511,12 @@ public static class SeedDatabase
             Protein = 22,
             Fat = 16,
             Carbs = 62,
+            TimesEaten = 3,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-11)),
             Ingredients = new List<Food> { blackBeans, wholeWheatBread, avocado, lettuce, tomato }
         };
+
         var teriyakiChicken = new Meal
         {
             Name = "Teriyaki Chicken Bowl",
@@ -1440,8 +1526,12 @@ public static class SeedDatabase
             Protein = 42,
             Fat = 8,
             Carbs = 68,
+            TimesEaten = 8,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-2)),
             Ingredients = new List<Food> { chicken, whiteRice, broccoli, soysauce, honey }
         };
+
         var porkChops = new Meal
         {
             Name = "Pork Chops with Quinoa",
@@ -1451,8 +1541,12 @@ public static class SeedDatabase
             Protein = 45,
             Fat = 15,
             Carbs = 48,
+            TimesEaten = 2,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-18)),
             Ingredients = new List<Food> { pork, quinoa, asparagus, oliveoil }
         };
+
         var fruitSalad = new Meal
         {
             Name = "Fruit Salad",
@@ -1462,8 +1556,12 @@ public static class SeedDatabase
             Protein = 2.5,
             Fat = 0.8,
             Carbs = 42,
+            TimesEaten = 4,
+            IsFavorite = true,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-4)),
             Ingredients = new List<Food> { strawberries, blueberries, orange, banana }
         };
+
         var nutsAndSeeds = new Meal
         {
             Name = "Nuts and Seeds Mix",
@@ -1473,8 +1571,12 @@ public static class SeedDatabase
             Protein = 16,
             Fat = 36,
             Carbs = 18,
+            TimesEaten = 5,
+            IsFavorite = false,
+            LastDayEaten = DateOnly.FromDateTime(DateTime.Now.AddDays(-6)),
             Ingredients = new List<Food> { almonds100g, walnuts, pumpkinSeeds }
         };
+
 
         // link meals back to foods
         chicken.Meals = new List<Meal>

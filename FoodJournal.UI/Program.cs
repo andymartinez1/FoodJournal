@@ -12,6 +12,7 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IFoodService, FoodService>();
+builder.Services.AddScoped<IMealService, MealService>();
 
 var connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection")

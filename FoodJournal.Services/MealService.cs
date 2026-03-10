@@ -69,6 +69,7 @@ public class MealService : IMealService
     public async Task<List<MealResponse>> GetAllMealsAsync()
     {
         var meals = await _context.Meals
+            .Include(m => m.Ingredients)
             .AsNoTracking()
             .ToListAsync();
 

@@ -17,6 +17,18 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<FoodMeal>()
+            .HasOne(fm => fm.Food)
+            .WithMany()
+            .HasForeignKey(fm => fm.FoodId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<FoodMeal>()
+            .HasOne(fm => fm.Meal)
+            .WithMany()
+            .HasForeignKey(fm => fm.MealId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Food>()
             .HasMany(f => f.Meals)
             .WithMany(m => m.Ingredients)
