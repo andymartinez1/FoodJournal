@@ -1,6 +1,4 @@
 ﻿@page "/foods/create"
-@using FoodJournal.Entities
-@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
 @inject IFoodService FoodService
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
@@ -58,9 +56,7 @@
 @code {
     [SupplyParameterFromForm] private AddFoodRequest Food { get; set; } = new();
     private List<Meal> _meals = new();
-    private IEnumerable<int> _selectedMealIds = Enumerable.Empty<int>();
-    bool success;
-    string[] errors = Array.Empty<string>();
+    private IEnumerable<int> _selectedMealIds = [];
 
     protected override async Task OnInitializedAsync()
     {

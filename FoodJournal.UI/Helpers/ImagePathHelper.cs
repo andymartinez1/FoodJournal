@@ -2,10 +2,10 @@ namespace FoodJournal.Helpers;
 
 public static class ImagePathHelper
 {
-    public static string GetImagePath(string name)
+    public static string GetMealImagePath(string name)
     {
-        var path = name.ToLower().Replace(" ", "-");
+        var meal = name.ToLower().Replace(" ", "-");
 
-        return $"{path}.png";
+        return $"img/{meal}.png";
     }
 }

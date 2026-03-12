@@ -1,5 +1,4 @@
 ﻿@page "/foods/edit/{FoodId:int}"
-@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -7,13 +6,9 @@
 
 <PageTitle>Edit</PageTitle>
 
-@if (_loading)
+@if (_notFound)
 {
-    <p>Loading...</p>
-}
-else if (_notFound)
-{
-    <p>Not found.</p>
+    <p>Food not found.</p>
 }
 else
 {
@@ -37,6 +32,14 @@ else
                             @foreach (var category in _existingCategories)
                             {
                                 <MudSelectItem T="string" Value="@category">@category</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudSelect T="int" Label="Appears in meals" Class="mt-3" MultiSelection="true"
+                                   SelectedValues="_selectedMealIds" SelectedValuesChanged="OnSelectedMealsChanged">
+                            @foreach (var m in _meals)
+                            {
+                                <MudSelectItem Value="@m.MealId">@m.Name (@m.MealType)</MudSelectItem>
                             }
                         </MudSelect>
 
@@ -74,15 +77,17 @@ else
 
 @code {
     [Parameter] public int FoodId { get; set; }
-
-    private bool _loading = true;
+    private IEnumerable<int> _selectedMealIds = Enumerable.Empty<int>();
+    private List<Meal> _meals = new();
     private bool _notFound;
     private List<string> _existingCategories = new();
     private UpdateFoodRequest Food { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var foods = await FoodService.GetAllFoodAsync(); // or a dedicated "GetCategories" endpoint
+        _meals = await FoodService.GetAllMealsAsync();
+
+        var foods = await FoodService.GetAllFoodAsync();
         _existingCategories = foods
             .Select(f => f.Category)
             .Where(c => !string.IsNullOrWhiteSpace(c))
@@ -93,14 +98,12 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        _loading = true;
         _notFound = false;
 
         var foodResponse = await FoodService.GetFoodByIdAsync(FoodId);
         if (foodResponse is null)
         {
             _notFound = true;
-            _loading = false;
             return;
         }
 
@@ -115,8 +118,12 @@ else
             Carbs = foodResponse.Carbs,
             MealIds = foodResponse.Meals?.Select(m => m.MealId).ToList() ?? new List<int>()
         };
+    }
 
-        _loading = false;
+    private Task OnSelectedMealsChanged(IEnumerable<int> values)
+    {
+        _selectedMealIds = values ?? Enumerable.Empty<int>();
+        return Task.CompletedTask;
     }
 
     private async Task UpdateFood()

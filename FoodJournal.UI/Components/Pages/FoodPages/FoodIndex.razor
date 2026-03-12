@@ -1,5 +1,4 @@
 ﻿@page "/foods"
-@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
 @inject IFoodService FoodService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
@@ -146,7 +145,7 @@
         if (!result.Canceled)
         {
             await FoodService.DeleteFoodAsync(foodId);
-            Snackbar.Add($"Food with ID:{foodId} deleted successfully!", Severity.Success);
+            Snackbar.Add($"{food.Name} deleted successfully!", Severity.Success);
 
             _foods = await LoadFoodItems();
             FilterItems();

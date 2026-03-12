@@ -1,6 +1,4 @@
 @page "/meals"
-@using FoodJournal.Entities
-@using FoodJournal.ServiceContracts.DTOs.MealDTOs
 @inject IMealService MealService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
@@ -92,28 +90,3 @@
     }
 
 }
-
-<style>
-    .meal-card {
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        transition: transform0 .2s ease, box-shadow0 .2s ease;
-        box-shadow: 04px 14px rgba(0, 0, 0, 0.08);
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-    }
-
-    .meal-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 012px 28px rgba(0, 0, 0, 0.18);
-    }
-
-    .meal-title {
-        font-weight: 700;
-        letter-spacing: 0.2px;
-    }
-
-    .meal-description {
-        opacity: 0.85;
-        line-height: 1.4;
-    }
-</style>

@@ -1,48 +1,109 @@
-@using FoodJournal.Helpers
-@using FoodJournal.ServiceContracts.DTOs.MealDTOs
 <MudItem xs="12" sm="6" md="4">
-    <MudCard>
-        <MudCardContent>
-            <MudStack Spacing="1">
-                <MudImage Src="@ImagePathHelper.GetImagePath(MealResponse.Name)" Alt="@MealResponse.Name"
-                          Fluid="true"></MudImage>
-                <MudText Typo="Typo.h6" Class="meal-title">@MealResponse.Name</MudText>
-                <MudText Typo="Typo.body2" Class="meal-description">@MealResponse.Description</MudText>
-                <MudChip T="string" Size="Size.Small" Color="Color.Primary"
-                         Variant="Variant.Text">@MealResponse.MealType.ToString()</MudChip>
+ <MudCard Class="meal-card">
+  <div class="image-wrap">
+   <MudImage Src="@ImagePathHelper.GetMealImagePath(MealResponse.Name)"
+             Alt="@MealResponse.Name"
+             Fluid="true"
+             Class="meal-image"/>
+   <div class="favorite-badge">
+    <MudIcon Icon="@(MealResponse.IsFavorite ? Icons.Material.Filled.Favorite : Icons.Material.Outlined.FavoriteBorder)"
+             Color="@(MealResponse.IsFavorite ? Color.Error : Color.Default)"/>
+   </div>
+  </div>
 
-                <MudDivider Class="my-1"/>
+  <MudCardContent>
+   <MudStack Spacing="1">
+    <MudText Typo="Typo.h6" Class="meal-title">@MealResponse.Name</MudText>
+    <MudText Typo="Typo.body2" Class="meal-description">@MealResponse.Description</MudText>
 
-                <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="1">
-                    <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">
-                        Calories: @MealResponse.Calories</MudChip>
-                    <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Info">
-                        Protein: @MealResponse.Protein g
-                    </MudChip>
-                    <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Warning">
-                        Fat: @MealResponse.Fat g
-                    </MudChip>
-                    <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success">
-                        Carbs: @MealResponse.Carbs g
-                    </MudChip>
-                </MudStack>
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+     <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">
+      @MealResponse.MealType </MudChip>
+     <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Color="Color.Tertiary">
+      Times Eaten: @MealResponse.TimesEaten </MudChip>
+     <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Color="Color.Tertiary">
+      Last Eaten: @MealResponse.LastDayEaten </MudChip>
+    </MudStack>
 
-                <MudDivider Class="my-1"/>
+    <MudDivider Class="my-1"/>
 
-                <MudText Typo="Typo.subtitle2" Class="mt-2">Ingredients</MudText>
-                <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="1">
-                    @foreach (var ingredient in MealResponse.Ingredients)
-                    {
-                        <MudChip T="string" Size="Size.Small" Variant="Variant.Text"
-                                 Color="Color.Secondary">@ingredient.Name</MudChip>
-                    }
-                </MudStack>
-            </MudStack>
-        </MudCardContent>
-    </MudCard>
+    <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="1">
+     <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">
+      Calories: @MealResponse.Calories</MudChip>
+     <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Info">
+      Protein: @MealResponse.Protein g
+     </MudChip>
+     <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Warning">Fat: @MealResponse.Fat g
+     </MudChip>
+     <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success">
+      Carbs: @MealResponse.Carbs g
+     </MudChip>
+    </MudStack>
+
+    <MudDivider Class="my-1"/>
+
+    <MudText Typo="Typo.subtitle2" Class="mt-2">Ingredients</MudText>
+    <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="1">
+     @foreach (var ingredient in MealResponse.Ingredients)
+     {
+      <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary">
+       @ingredient.Name </MudChip>
+     }
+    </MudStack>
+   </MudStack>
+  </MudCardContent>
+ </MudCard>
 </MudItem>
 
+<style>
+ .meal-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 08px24px rgba(0, 0, 0, 0.18);
+  transition: transform0 .2s ease, box-shadow0 .2s ease;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+ }
+
+ .meal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 012px28px rgba(0, 0, 0, 0.24);
+ }
+
+ .image-wrap {
+  position: relative;
+ }
+
+ .meal-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+ }
+
+ .favorite-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 04px12px rgba(0, 0, 0, 0.2);
+ }
+
+ .meal-title {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+ }
+
+ .meal-description {
+  opacity: 0.82;
+ }
+</style>
 
 @code {
-    [Parameter] public MealResponse MealResponse { get; set; }
+ [Parameter] [EditorRequired] public MealResponse MealResponse { get; set; } = default!;
 }
