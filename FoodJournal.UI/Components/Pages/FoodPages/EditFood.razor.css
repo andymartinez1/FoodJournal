@@ -1,0 +1,148 @@
+.edit-page {
+    padding: 32px 24px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.page-header {
+    margin-bottom: 28px;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 4px;
+    letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.not-found {
+    text-align: center;
+    padding: 64px 0;
+    color: #94a3b8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.form-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 24px 28px;
+    margin-top: 0 !important;
+}
+
+.form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+    margin-bottom: 18px;
+}
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Plain <div> before ::deep, MudTextField internals after */
+.cal-field ::deep .mud-input-outlined-border {
+    border-color: #f59e0b;
+    border-width: 2px;
+}
+
+.prot-field ::deep .mud-input-outlined-border {
+    border-color: #6366f1;
+    border-width: 2px;
+}
+
+.fat-field ::deep .mud-input-outlined-border {
+    border-color: #ef4444;
+    border-width: 2px;
+}
+
+.carb-field ::deep .mud-input-outlined-border {
+    border-color: #10b981;
+    border-width: 2px;
+}
+
+.cal-field ::deep label {
+    color: #d97706;
+}
+
+.prot-field ::deep label {
+    color: #4f46e5;
+}
+
+.fat-field ::deep label {
+    color: #dc2626;
+}
+
+.carb-field ::deep label {
+    color: #16a34a;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ── MudBlazor components — ::deep required ── */
+::deep .back-btn {
+    text-transform: none !important;
+    font-size: 0.82rem !important;
+    color: #64748b !important;
+    padding: 0 4px 0 0 !important;
+    min-width: 0 !important;
+    margin-bottom: 6px;
+}
+
+::deep .back-btn:hover {
+    color: #0B84FF !important;
+    background: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+::deep .section-icon {
+    font-size: 1rem !important;
+}
+
+::deep .form-field {
+    margin-bottom: 16px;
+}
+
+::deep .cancel-btn {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+}
+
+::deep .submit-btn {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+    padding: 8px 24px !important;
+}
+

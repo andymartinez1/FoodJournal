@@ -4,53 +4,108 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Food</PageTitle>
 
-<EditForm method="post" Model="Food" OnValidSubmit="AddFood" FormName="createFood" Enhance>
-    <DataAnnotationsValidator/>
-    <MudGrid>
-        <MudItem xs="12" sm="7">
-            <MudCard>
-                <MudCardContent>
-                    <MudTextField Label="Food name" HelperText="Max. 8 characters"
-                                  @bind-Value="Food.Name" For="@(() => Food.Name)"/>
-                    <MudSelect Label="Category" Class="mt-3"
-                               @bind-Value="Food.Category" For="@(() => Food.Category)">
-                        @foreach (FoodCategory category in Enum.GetValues(typeof(FoodCategory)))
-                        {
-                            <MudSelectItem value="@category">@category</MudSelectItem>
-                        }
-                    </MudSelect>
+<div class="create-page">
+    <div class="page-header">
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack"
+                   Class="back-btn" OnClick="@Home">Foods
+        </MudButton>
+        <h1 class="page-title">Create Food</h1>
+        <p class="page-subtitle">Add a new food item to your library</p>
+    </div>
 
-                    <MudSelect T="int" Label="Appears in meals" Class="mt-3" MultiSelection="true"
-                               SelectedValues="_selectedMealIds" SelectedValuesChanged="OnSelectedMealsChanged">
-                        @foreach (var m in _meals)
-                        {
-                            <MudSelectItem Value="@m.MealId">@m.Name (@m.MealType)</MudSelectItem>
-                        }
-                    </MudSelect>
+    <EditForm method="post" Model="Food" OnValidSubmit="AddFood" FormName="createFood" Enhance>
+        <DataAnnotationsValidator/>
 
-                    <MudTextField Label="Calories" HelperText="" Class="mt-3"
-                                  @bind-Value="Food.Calories" For="@(() => Food.Calories)"/>
-                    <MudTextField Label="Protein(g)" HelperText="" Class="mt-3"
-                                  @bind-Value="Food.Protein" For="@(() => Food.Protein)"/>
-                    <MudTextField Label="Fat(g)" HelperText="" Class="mt-3"
-                                  @bind-Value="Food.Fat" For="@(() => Food.Fat)"/>
-                    <MudTextField Label="Carbs(g)" HelperText="" Class="mt-3"
-                                  @bind-Value="Food.Carbs" For="@(() => Food.Carbs)"/>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary"
-                               Class="ml-auto" OnClick="@Home">Cancel
-                    </MudButton>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
-                               Class="ml-auto">Submit
-                    </MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
-</EditForm>
+        <div class="form-layout">
+            <div class="form-card">
+                <div class="form-section-title">
+                    <MudIcon Icon="@Icons.Material.Outlined.Info" Class="section-icon"/>
+                    Basic Info
+                </div>
+
+                <MudTextField Label="Food name"
+                              @bind-Value="Food.Name"
+                              For="@(() => Food.Name)"
+                              Variant="Variant.Outlined"
+                              Class="form-field"/>
+
+                <MudSelect Label="Category"
+                           @bind-Value="Food.Category"
+                           For="@(() => Food.Category)"
+                           Variant="Variant.Outlined"
+                           Class="form-field">
+                    @foreach (FoodCategory category in Enum.GetValues(typeof(FoodCategory)))
+                    {
+                        <MudSelectItem value="@category">@category</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int" Label="Appears in meals"
+                           MultiSelection="true"
+                           Variant="Variant.Outlined"
+                           SelectedValues="_selectedMealIds"
+                           SelectedValuesChanged="OnSelectedMealsChanged"
+                           Class="form-field">
+                    @foreach (var m in _meals)
+                    {
+                        <MudSelectItem Value="@m.MealId">@m.Name (@m.MealType)</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+
+            <div class="form-card">
+                <div class="form-section-title">
+                    <MudIcon Icon="@Icons.Material.Outlined.LocalFireDepartment" Class="section-icon"/>
+                    Nutrition
+                </div>
+
+                <div class="nutrition-grid">
+                    <div class="nutrient-field cal-field">
+                        <MudTextField Label="Calories (kcal)"
+                                      @bind-Value="Food.Calories"
+                                      For="@(() => Food.Calories)"
+                                      Variant="Variant.Outlined"/>
+                    </div>
+                    <div class="nutrient-field prot-field">
+                        <MudTextField Label="Protein (g)"
+                                      @bind-Value="Food.Protein"
+                                      For="@(() => Food.Protein)"
+                                      Variant="Variant.Outlined"/>
+                    </div>
+                    <div class="nutrient-field fat-field">
+                        <MudTextField Label="Fat (g)"
+                                      @bind-Value="Food.Fat"
+                                      For="@(() => Food.Fat)"
+                                      Variant="Variant.Outlined"/>
+                    </div>
+                    <div class="nutrient-field carb-field">
+                        <MudTextField Label="Carbs (g)"
+                                      @bind-Value="Food.Carbs"
+                                      For="@(() => Food.Carbs)"
+                                      Variant="Variant.Outlined"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <MudButton Variant="Variant.Outlined"
+                           StartIcon="@Icons.Material.Filled.Close"
+                           Class="cancel-btn" OnClick="@Home">
+                    Cancel
+                </MudButton>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled" Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           Class="submit-btn">
+                    Add Food
+                </MudButton>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
 
 
 @code {

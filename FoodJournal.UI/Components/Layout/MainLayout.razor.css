@@ -1,0 +1,6 @@
+::deep .app-bar {
+    background: linear-gradient(90deg, var(--c-blue-deep) 0%, var(--c-blue) 40%, var(--c-teal) 70%, var(--c-cyan-light) 100%) !important;
+    border-bottom: none !important;
+    box-shadow: 0 2px 16px rgba(11, 132, 255, 0.18) !important;
+}
+

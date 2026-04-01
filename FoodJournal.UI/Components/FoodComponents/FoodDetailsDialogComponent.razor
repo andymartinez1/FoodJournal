@@ -1,74 +1,73 @@
-﻿@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
-<MudDialog Class="blur dialog-background mud-dialog" TitleClass="blur dialog-background-title"
-           ContentClass="dialog-background-surface py-10" ActionsClass="dialog-background-surface">
+﻿<MudDialog>
     <TitleContent>
-        <div class="dialog-background-title">
-            <MudText>
-                Details for @Food.Name:
-            </MudText>
+        <div class="details-title">
+            <MudIcon Icon="@Icons.Material.Outlined.Info" Class="title-icon"/>
+            <span>@Food.Name</span>
         </div>
     </TitleContent>
     <DialogContent>
-        <div class="dialog-background-surface">
-            <MudTextField Value="@Food.Name" Label="Name" ReadOnly="true"></MudTextField>
-            <MudTextField Value="@Food.Category" Label="Category" ReadOnly="true"></MudTextField>
-            <MudTextField Value="@Food.Calories" Label="Calories" ReadOnly="true"></MudTextField>
-            <MudTextField Value="@Food.Protein" Label="Protein" ReadOnly="true"></MudTextField>
-            <MudTextField Value="@Food.Fat" Label="Fat" ReadOnly="true"></MudTextField>
-            <MudTextField Value="@Food.Carbs" Label="Carbs" ReadOnly="true"></MudTextField>
+        <div class="details-body">
 
-            <MudDivider Class="my-4"/>
-            <MudText Typo="Typo.h6">Appears in meals:</MudText>
+            <div class="detail-row">
+                <span class="detail-label">Name</span>
+                <span class="detail-value">@Food.Name</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Category</span>
+                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined"
+                         Color="Color.Primary" Class="cat-chip">@Food.Category</MudChip>
+            </div>
 
-            @if (!Food.Meals.Any())
-            {
-                <MudText>No meals found for this ingredient.</MudText>
-            }
-            else
-            {
-                <MudTable Items="Food.Meals" Hover="true" Dense="true">
-                    <HeaderContent>
-                        <MudTh>Name</MudTh>
-                        <MudTh>Type</MudTh>
-                        <MudTh>Calories</MudTh>
-                        <MudTh>Description</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd DataLabel="Name">@context.Name</MudTd>
-                        <MudTd DataLabel="Type">@context.MealType</MudTd>
-                        <MudTd DataLabel="Calories">@context.Calories</MudTd>
-                        <MudTd DataLabel="Description">@context.Description</MudTd>
-                    </RowTemplate>
-                </MudTable>
-            }
+            <div class="nutrition-grid">
+                <div class="nutrient cal">
+                    <span class="nutrient-val">@Food.Calories</span>
+                    <span class="nutrient-lbl">kcal</span>
+                </div>
+                <div class="nutrient prot">
+                    <span class="nutrient-val">@Food.Protein g</span>
+                    <span class="nutrient-lbl">protein</span>
+                </div>
+                <div class="nutrient fat">
+                    <span class="nutrient-val">@Food.Fat g</span>
+                    <span class="nutrient-lbl">fat</span>
+                </div>
+                <div class="nutrient carb">
+                    <span class="nutrient-val">@Food.Carbs g</span>
+                    <span class="nutrient-lbl">carbs</span>
+                </div>
+            </div>
+
+            <div class="meals-section">
+                <p class="meals-label">Appears in meals</p>
+                @if (!Food.Meals.Any())
+                {
+                    <p class="no-meals">Not used in any meals yet.</p>
+                }
+                else
+                {
+                    <div class="meals-list">
+                        @foreach (var meal in Food.Meals)
+                        {
+                            <div class="meal-row">
+                                <span class="meal-name">@meal.Name</span>
+                                <MudChip T="string" Size="Size.Small" Variant="Variant.Text"
+                                         Color="Color.Default" Class="meal-type-chip">@meal.MealType</MudChip>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
         </div>
     </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="@(() => MudDialog.Cancel())"
+                   Class="close-btn">Close
+        </MudButton>
+    </DialogActions>
 </MudDialog>
 
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
     [Parameter] public FoodResponse Food { get; set; } = default!;
 }
-
-<style>
-    .blur {
-        backdrop-filter: blur(10px);
-    }
-
-    .mud-dialog {
-        width: 500px;
-    }
-
-    .dialog-background {
-        background-color: transparent;
-    }
-
-    .dialog-background-title {
-        background: #6873fe;
-        color: #fff;
-    }
-
-    .dialog-background-surface {
-        background: #dedede;
-    }
-</style>

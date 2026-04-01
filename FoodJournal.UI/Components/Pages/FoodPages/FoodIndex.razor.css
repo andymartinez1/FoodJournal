@@ -1,0 +1,142 @@
+.foods-page {
+    padding: 32px 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 4px;
+    letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.table-wrap {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+/* Nutrient badges — plain <span> in RenderFragment, no ::deep needed */
+.nutrient-badge {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.nutrient-badge.cal {
+    background: #fff7ed;
+    color: #d97706;
+}
+
+.nutrient-badge.prot {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.nutrient-badge.fat {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.nutrient-badge.carb {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+/* ── MudBlazor components — ::deep required ── */
+::deep .add-btn {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+    padding: 8px 22px !important;
+}
+
+::deep .search-field {
+    flex: 1;
+    min-width: 180px;
+}
+
+::deep .filter-btn {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap;
+}
+
+::deep .foods-table {
+    margin-top: 0 !important;
+}
+
+::deep .food-name-link {
+    font-weight: 600;
+    color: #0f172a !important;
+    transition: color 0.15s;
+}
+
+::deep .food-name-link:hover {
+    color: #0B84FF !important;
+}
+
+::deep .category-chip {
+    font-size: 0.74rem !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+}
+
+::deep .action-icon-btn {
+    transition: background 0.15s, color 0.15s, transform 0.15s !important;
+}
+
+::deep .action-icon-btn:hover {
+    transform: scale(1.12) !important;
+}
+
+::deep .edit-btn {
+    color: #f59e0b !important;
+}
+
+::deep .edit-btn:hover {
+    background: #fff7ed !important;
+}
+
+::deep .delete-btn {
+    color: #ef4444 !important;
+}
+
+::deep .delete-btn:hover {
+    background: #fef2f2 !important;
+}

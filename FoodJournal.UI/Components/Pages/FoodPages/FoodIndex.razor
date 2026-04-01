@@ -7,69 +7,99 @@
 
 <PageTitle>Food</PageTitle>
 
-<MudGrid>
-    <MudItem xs="3">
+<div class="foods-page">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Foods</h1>
+            <p class="page-subtitle">Manage your food item library</p>
+        </div>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   Class="add-btn"
+                   OnClick="Create">
+            Add Food
+        </MudButton>
+    </div>
+
+    <div class="filter-bar">
         <MudTextField T="string" Value="@NameSearch"
                       ValueChanged="@(v => OnSearchChanged(nameof(NameSearch), v))"
                       ValueExpression="(() => NameSearch)"
-                      Label="Search Food Name"
+                      Placeholder="Search by name..."
                       Variant="Variant.Outlined"
-                      Immediate="true"/>
-    </MudItem>
-    <MudItem xs="3">
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Immediate="true"
+                      Class="search-field"/>
         <MudTextField T="string" Value="@CategorySearch"
                       ValueChanged="@(v => OnSearchChanged(nameof(CategorySearch), v))"
                       ValueExpression="(() => CategorySearch)"
-                      Label="Search Food Category"
+                      Placeholder="Filter by category..."
                       Variant="Variant.Outlined"
-                      Immediate="true"/>
-    </MudItem>
-    <MudItem xs="1" Class="d-flex flex-column justify-center align-center">
-        <label>Clear Filters</label>
-        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@ClearFilters">
-            <i class="fa-solid fa-x"></i></MudButton>
-    </MudItem>
-    <MudItem xs="1" Class="d-flex flex-column justify-center align-center">
-        <label>Add Food</label>
-        <MudButton Variant="Variant.Outlined" Color="Color.Tertiary" @onclick="Create">
-            <i class="fa-solid fa-plus"></i></MudButton>
-    </MudItem>
-</MudGrid>
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Category"
+                      Immediate="true"
+                      Class="search-field"/>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                   StartIcon="@Icons.Material.Filled.FilterAltOff"
+                   OnClick="@ClearFilters"
+                   Class="filter-btn">
+            Clear
+        </MudButton>
+    </div>
 
-<MudTable Items="@_filteredFoods" Hover="true" Breakpoint="Breakpoint.Sm"
-          LoadingProgressColor="Color.Info" Class="mt-3">
-
-    <HeaderContent>
-        <MudTh>Name</MudTh>
-        <MudTh>Category</MudTh>
-        <MudTh>Calories</MudTh>
-        <MudTh>Protein(g)</MudTh>
-        <MudTh>Fat(g)</MudTh>
-        <MudTh>Carbs(g)</MudTh>
-        <MudTh>Actions</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Name">
-            <MudLink Underline="Underline.None" OnClick="@(() => Details(context.FoodId))">
-                @context.Name
-            </MudLink>
-        </MudTd>
-        <MudTd DataLabel="Category">@context.Category</MudTd>
-        <MudTd DataLabel="Calories">@context.Calories</MudTd>
-        <MudTd DataLabel="Protein">@context.Protein</MudTd>
-        <MudTd DataLabel="Fat">@context.Fat</MudTd>
-        <MudTd DataLabel="Carbs">@context.Carbs</MudTd>
-        <MudTd DataLabel="Actions">
-            <MudButton Variant="Variant.Filled" Class="btn-edit" OnClick="@(() => Edit(context.FoodId))"><i
-                    class="fa-solid fa-pen-to-square"></i></MudButton>
-            <MudButton Variant="Variant.Filled" Class="btn-delete" OnClick="@(() => Delete(context.FoodId))">
-                <i class="fa-solid fa-trash-can"></i></MudButton>
-        </MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager/>
-    </PagerContent>
-</MudTable>
+    <div class="table-wrap">
+        <MudTable Items="@_filteredFoods" Hover="true" Breakpoint="Breakpoint.Sm"
+                  LoadingProgressColor="Color.Info" Elevation="0" Class="foods-table">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Category</MudTh>
+                <MudTh Style="text-align:center">Calories</MudTh>
+                <MudTh Style="text-align:center">Protein (g)</MudTh>
+                <MudTh Style="text-align:center">Fat (g)</MudTh>
+                <MudTh Style="text-align:center">Carbs (g)</MudTh>
+                <MudTh Style="text-align:right">Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">
+                    <MudLink Underline="Underline.None" Class="food-name-link"
+                             OnClick="@(() => Details(context.FoodId))">
+                        @context.Name
+                    </MudLink>
+                </MudTd>
+                <MudTd DataLabel="Category">
+                    <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined"
+                             Color="Color.Primary" Class="category-chip">
+                        @context.Category
+                    </MudChip>
+                </MudTd>
+                <MudTd DataLabel="Calories" Style="text-align:center">
+                    <span class="nutrient-badge cal">@context.Calories</span>
+                </MudTd>
+                <MudTd DataLabel="Protein" Style="text-align:center">
+                    <span class="nutrient-badge prot">@context.Protein</span>
+                </MudTd>
+                <MudTd DataLabel="Fat" Style="text-align:center">
+                    <span class="nutrient-badge fat">@context.Fat</span>
+                </MudTd>
+                <MudTd DataLabel="Carbs" Style="text-align:center">
+                    <span class="nutrient-badge carb">@context.Carbs</span>
+                </MudTd>
+                <MudTd DataLabel="Actions" Style="text-align:right">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit"
+                                   Size="Size.Small" Class="action-icon-btn edit-btn"
+                                   OnClick="@(() => Edit(context.FoodId))"/>
+                    <MudIconButton Icon="@Icons.Material.Outlined.DeleteOutline"
+                                   Size="Size.Small" Class="action-icon-btn delete-btn"
+                                   OnClick="@(() => Delete(context.FoodId))"/>
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager/>
+            </PagerContent>
+        </MudTable>
+    </div>
+</div>
 
 @code {
     public string NameSearch { get; set; } = "";

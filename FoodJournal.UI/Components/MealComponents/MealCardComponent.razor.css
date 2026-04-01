@@ -1,0 +1,105 @@
+.image-wrap {
+    position: relative;
+}
+
+.favorite-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(4px);
+}
+
+.meta-text {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.ingredients-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    margin: 0 0 6px;
+}
+
+/* ── MudBlazor components — ::deep required ── */
+
+::deep .meal-card {
+    border-radius: 16px !important;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07) !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    background: #ffffff !important;
+    margin-top: 0 !important;
+}
+
+::deep .meal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12) !important;
+}
+
+::deep .meal-image {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+}
+
+::deep .card-body {
+    padding: 16px 18px 8px !important;
+}
+
+::deep .meal-title {
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+}
+
+::deep .meal-description {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+::deep .type-chip {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+}
+
+::deep .ingredient-chip {
+    font-size: 0.75rem !important;
+    border-color: #e2e8f0 !important;
+    color: #475569 !important;
+}
+
+::deep .card-actions {
+    padding: 8px 18px 14px !important;
+    gap: 8px;
+}
+
+::deep .action-btn {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+    font-size: 0.82rem !important;
+}

@@ -1,22 +1,19 @@
-﻿<MudNavMenu>
+﻿<div class="drawer-brand">
+    <div class="brand-icon-wrap">
+        <MudIcon Icon="@Icons.Material.Filled.DinnerDining" Style="color:#0B84FF;font-size:1.5rem;"/>
+    </div>
+    <div class="brand-text">
+        <span class="brand-name">Food Journal</span>
+        <span class="brand-sub">Nutrition Tracker</span>
+    </div>
+</div>
+
+<div class="nav-divider"></div>
+
+<MudNavMenu Class="nav-menu">
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="/meals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.DinnerDining">Meals</MudNavLink>
     <MudNavLink Href="/foods" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Restaurant">Foods</MudNavLink>
 </MudNavMenu>
 
-<style>
-    .mud-nav-link {
-        display: flex;
-        align-items: center;
-        font-size: 1.2rem;
-        font-weight: 500;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        letter-spacing: 0.3px;
-    }
 
-    .mud-nav-link:hover {
-        background-color: #fff3e0;
-        border-left: 6px solid #ff9800;
-        padding-left: calc(16px - 4px);
-    }
-</style>
