@@ -66,7 +66,7 @@
                                Class="form-field">
                         @foreach (var m in _meals)
                         {
-                            <MudSelectItem Value="@m.MealId">@m.Name (@m.MealType)</MudSelectItem>
+                            <MudSelectItem Value="@m.Id">@m.Name (@m.MealType)</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
@@ -137,7 +137,7 @@
     {
         _meals = await FoodService.GetAllMealsAsync();
 
-        var foods = await FoodService.GetAllFoodAsync();
+        var foods = await FoodService.GetAllAsync();
         _existingCategories = foods
             .Select(f => f.Category)
             .Where(c => !string.IsNullOrWhiteSpace(c))
@@ -150,7 +150,7 @@
     {
         _notFound = false;
 
-        var foodResponse = await FoodService.GetFoodByIdAsync(FoodId);
+        var foodResponse = await FoodService.GetByIdAsync(FoodId);
         if (foodResponse is null)
         {
             _notFound = true;
@@ -166,7 +166,7 @@
             Protein = foodResponse.Protein,
             Fat = foodResponse.Fat,
             Carbs = foodResponse.Carbs,
-            MealIds = foodResponse.Meals?.Select(m => m.MealId).ToList() ?? new List<int>()
+            MealIds = foodResponse.Meals?.Select(m => m.Id).ToList() ?? new List<int>()
         };
     }
 
@@ -178,7 +178,7 @@
 
     private async Task UpdateFood()
     {
-        await FoodService.UpdateFoodAsync(Food);
+        await FoodService.UpdateAsync(Food);
         Snackbar.Add($"{Food.Name} updated successfully!", Severity.Success);
         NavigationManager.NavigateTo("/foods");
     }

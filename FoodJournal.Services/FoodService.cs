@@ -18,27 +18,27 @@ public class FoodService : IFoodService
         _logger = logger;
     }
 
-    public async Task<FoodResponse> AddFoodAsync(AddFoodRequest? foodRequest)
+    public async Task<FoodResponse> AddAsync(AddFoodRequest? request)
     {
-        ArgumentNullException.ThrowIfNull(foodRequest);
+        ArgumentNullException.ThrowIfNull(request);
 
-        if (await _context.FoodItems.AnyAsync(f => f.Name == foodRequest.Name))
+        if (await _context.FoodItems.AnyAsync(f => f.Name == request.Name))
         {
-            _logger.LogWarning("Attempted to add food that already exists: {FoodName}", foodRequest.Name);
-            var existingFood = await _context.FoodItems.FirstOrDefaultAsync(f => f.Name == foodRequest.Name);
+            _logger.LogWarning("Attempted to add food that already exists: {FoodName}", request.Name);
+            var existingFood = await _context.FoodItems.FirstOrDefaultAsync(f => f.Name == request.Name);
             if (existingFood is not null)
                 return MapToFoodResponse(existingFood);
         }
 
-        var foodItem = MapToFoodEntity(foodRequest);
+        var foodItem = MapToFoodEntity(request);
 
-        if (foodRequest.MealIds?.Any() == true)
+        if (request.MealIds?.Any() == true)
         {
             var meals = await _context.Meals
-                .Where(m => foodRequest.MealIds.Contains(m.MealId))
+                .Where(m => request.MealIds.Contains(m.Id))
                 .ToListAsync();
 
-            var missing = foodRequest.MealIds.Except(meals.Select(m => m.MealId)).ToList();
+            var missing = request.MealIds.Except(meals.Select(m => m.Id)).ToList();
             if (missing.Any())
                 _logger.LogWarning("Some MealIds were not found while creating food: {Missing}", missing);
 
@@ -62,27 +62,32 @@ public class FoodService : IFoodService
             return MapToFoodResponse(foodItem);
         }
 
-        _logger.LogInformation("Food with ID: {id} added.", foodItem.FoodId);
+        _logger.LogInformation("Food with ID: {id} added.", foodItem.Id);
         return MapToFoodResponse(foodItem);
     }
 
-    public async Task<FoodResponse?> GetFoodByIdAsync(int? foodId)
+    public async Task<List<Meal>> GetAllMealsAsync()
     {
-        ArgumentNullException.ThrowIfNull(foodId);
+        return await _context.Meals.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<FoodResponse?> GetByIdAsync(int id)
+    {
+        ArgumentNullException.ThrowIfNull(id);
 
         var food = await _context.FoodItems
             .Include(f => f.Meals)
             .AsNoTracking()
-            .FirstOrDefaultAsync(f => f.FoodId == foodId);
+            .FirstOrDefaultAsync(f => f.Id == id);
 
         if (food is null)
             return null;
 
-        _logger.LogInformation("Food with ID: {FoodId} retrieved.", food?.FoodId);
+        _logger.LogInformation("Food with ID: {FoodId} retrieved.", food?.Id);
         return MapToFoodResponse(food);
     }
 
-    public async Task<List<FoodResponse>> GetAllFoodAsync()
+    public async Task<List<FoodResponse>> GetAllAsync()
     {
         var foodList = await _context.FoodItems
             .AsNoTracking()
@@ -91,32 +96,32 @@ public class FoodService : IFoodService
         return foodList.Select(MapToFoodResponse).ToList();
     }
 
-    public async Task<FoodResponse?> UpdateFoodAsync(UpdateFoodRequest? foodRequest)
+    public async Task<FoodResponse?> UpdateAsync(UpdateFoodRequest? request)
     {
-        ArgumentNullException.ThrowIfNull(foodRequest);
+        ArgumentNullException.ThrowIfNull(request);
 
         var foodToUpdate = await _context.FoodItems.Include(f => f.Meals)
-            .FirstOrDefaultAsync(f => f.FoodId == foodRequest.FoodId);
+            .FirstOrDefaultAsync(f => f.Id == request.FoodId);
 
         if (foodToUpdate is null)
-            throw new KeyNotFoundException($"Food with id {foodRequest.FoodId} not found.");
+            throw new KeyNotFoundException($"Food with id {request.FoodId} not found.");
 
 
-        foodToUpdate.Name = foodRequest.Name;
-        foodToUpdate.Category = foodRequest.Category;
-        foodToUpdate.Calories = foodRequest.Calories;
-        foodToUpdate.Protein = foodRequest.Protein;
-        foodToUpdate.Fat = foodRequest.Fat;
-        foodToUpdate.Carbs = foodRequest.Carbs;
-        foodToUpdate.Meals = foodRequest.Meals;
+        foodToUpdate.Name = request.Name;
+        foodToUpdate.Category = request.Category;
+        foodToUpdate.Calories = request.Calories;
+        foodToUpdate.Protein = request.Protein;
+        foodToUpdate.Fat = request.Fat;
+        foodToUpdate.Carbs = request.Carbs;
+        foodToUpdate.Meals = request.Meals;
 
-        if (foodRequest.MealIds?.Any() == true)
+        if (request.MealIds?.Any() == true)
         {
             var meals = await _context.Meals
-                .Where(m => foodRequest.MealIds.Contains(m.MealId))
+                .Where(m => request.MealIds.Contains(m.Id))
                 .ToListAsync();
 
-            var missing = foodRequest.MealIds.Except(meals.Select(m => m.MealId)).ToList();
+            var missing = request.MealIds.Except(meals.Select(m => m.Id)).ToList();
             if (missing.Any())
                 _logger.LogWarning("Some Meal IDs were not found while updating food: {Missing}", missing);
 
@@ -144,15 +149,15 @@ public class FoodService : IFoodService
             return MapToFoodResponse(foodToUpdate);
         }
 
-        _logger.LogInformation("Food with ID: {foodId} updated.", foodToUpdate.FoodId);
+        _logger.LogInformation("Food with ID: {foodId} updated.", foodToUpdate.Id);
         return MapToFoodResponse(foodToUpdate);
     }
 
-    public async Task<bool> DeleteFoodAsync(int? foodId)
+    public async Task<bool> DeleteAsync(int id)
     {
-        ArgumentNullException.ThrowIfNull(foodId);
+        ArgumentNullException.ThrowIfNull(id);
 
-        var food = await _context.FoodItems.FindAsync(foodId);
+        var food = await _context.FoodItems.FindAsync(id);
 
         if (food is null)
             return false;
@@ -174,20 +179,15 @@ public class FoodService : IFoodService
             return false;
         }
 
-        _logger.LogInformation("Food with ID: {foodId} deleted.", food.FoodId);
+        _logger.LogInformation("Food with ID: {foodId} deleted.", food.Id);
         return true;
-    }
-
-    public async Task<List<Meal>> GetAllMealsAsync()
-    {
-        return await _context.Meals.AsNoTracking().ToListAsync();
     }
 
     private static FoodResponse MapToFoodResponse(Food food)
     {
         return new FoodResponse
         {
-            FoodId = food.FoodId,
+            FoodId = food.Id,
             Name = food.Name,
             Category = food.Category,
             Calories = food.Calories,

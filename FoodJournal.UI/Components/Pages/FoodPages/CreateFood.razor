@@ -50,7 +50,7 @@
                            Class="form-field">
                     @foreach (var m in _meals)
                     {
-                        <MudSelectItem Value="@m.MealId">@m.Name (@m.MealType)</MudSelectItem>
+                        <MudSelectItem Value="@m.Id">@m.Name (@m.MealType)</MudSelectItem>
                     }
                 </MudSelect>
             </div>
@@ -128,7 +128,7 @@
     private async Task AddFood()
     {
         Food.MealIds = _selectedMealIds?.ToList() ?? new List<int>();
-        await FoodService.AddFoodAsync(Food);
+        await FoodService.AddAsync(Food);
         Snackbar.Add($"{Food.Name} added successfully!", Severity.Success);
         NavigationManager.NavigateTo("/foods");
     }

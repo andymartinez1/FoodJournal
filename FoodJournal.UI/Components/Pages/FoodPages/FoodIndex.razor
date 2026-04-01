@@ -116,7 +116,7 @@
 
     private async Task<List<FoodResponse>> LoadFoodItems()
     {
-        return await FoodService.GetAllFoodAsync();
+        return await FoodService.GetAllAsync();
     }
 
     private void OnSearchChanged(string searchBy, string value)
@@ -152,7 +152,7 @@
 
     private async Task Details(int foodId)
     {
-        var food = await FoodService.GetFoodByIdAsync(foodId);
+        var food = await FoodService.GetByIdAsync(foodId);
 
         var parameters = new DialogParameters<FoodDetailsDialogComponent> { { "Food", food } };
         var dialog = await DialogService.ShowAsync<FoodDetailsDialogComponent>("Details", parameters);
@@ -166,7 +166,7 @@
 
     private async Task Delete(int foodId)
     {
-        var food = await FoodService.GetFoodByIdAsync(foodId);
+        var food = await FoodService.GetByIdAsync(foodId);
 
         var parameters = new DialogParameters<DeleteFoodDialogComponent> { { "Food", food } };
         var dialog = await DialogService.ShowAsync<DeleteFoodDialogComponent>("Delete", parameters);
@@ -174,7 +174,7 @@
 
         if (!result.Canceled)
         {
-            await FoodService.DeleteFoodAsync(foodId);
+            await FoodService.DeleteAsync(foodId);
             Snackbar.Add($"{food.Name} deleted successfully!", Severity.Success);
 
             _foods = await LoadFoodItems();

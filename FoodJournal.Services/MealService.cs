@@ -18,16 +18,16 @@ public class MealService : IMealService
         _logger = logger;
     }
 
-    public async Task<MealResponse> AddMealAsync(AddMealRequest? mealRequest)
+    public async Task<MealResponse> AddAsync(AddMealRequest? request)
     {
-        ArgumentNullException.ThrowIfNull(mealRequest);
+        ArgumentNullException.ThrowIfNull(request);
 
-        _logger.LogWarning("Attempted to add a meal that already exists: {MealName}", mealRequest.Name);
-        var existingMeal = await _context.Meals.FirstOrDefaultAsync(m => m.Name == mealRequest.Name);
+        _logger.LogWarning("Attempted to add a meal that already exists: {MealName}", request.Name);
+        var existingMeal = await _context.Meals.FirstOrDefaultAsync(m => m.Name == request.Name);
         if (existingMeal is not null)
             return MapToMealResponse(existingMeal);
 
-        var meal = MapToMealEntity(mealRequest);
+        var meal = MapToMealEntity(request);
 
         await _context.Meals.AddAsync(meal);
 
@@ -46,27 +46,27 @@ public class MealService : IMealService
             return MapToMealResponse(meal);
         }
 
-        _logger.LogInformation("Meal with ID: {id} added.", meal.MealId);
+        _logger.LogInformation("Meal with ID: {id} added.", meal.Id);
         return MapToMealResponse(meal);
     }
 
-    public async Task<MealResponse?> GetMealByIdAsync(int? mealId)
+    public async Task<MealResponse?> GetByIdAsync(int id)
     {
-        ArgumentNullException.ThrowIfNull(mealId);
+        ArgumentNullException.ThrowIfNull(id);
 
         var meal = await _context.Meals
             .Include(m => m.Ingredients)
             .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.MealId == mealId);
+            .FirstOrDefaultAsync(m => m.Id == id);
 
         if (meal is null)
             return null;
 
-        _logger.LogInformation("Meal with ID: {MealId} retrieved.", meal?.MealId);
+        _logger.LogInformation("Meal with ID: {MealId} retrieved.", meal?.Id);
         return MapToMealResponse(meal);
     }
 
-    public async Task<List<MealResponse>> GetAllMealsAsync()
+    public async Task<List<MealResponse>> GetAllAsync()
     {
         var meals = await _context.Meals
             .Include(m => m.Ingredients)
@@ -76,33 +76,33 @@ public class MealService : IMealService
         return meals.Select(MapToMealResponse).ToList();
     }
 
-    public async Task<MealResponse?> UpdateMealAsync(UpdateMealRequest? mealRequest)
+    public async Task<MealResponse?> UpdateAsync(UpdateMealRequest? request)
     {
-        ArgumentNullException.ThrowIfNull(mealRequest);
+        ArgumentNullException.ThrowIfNull(request);
 
-        var mealToUpdate = await _context.Meals.FindAsync(mealRequest.MealId);
+        var mealToUpdate = await _context.Meals.FindAsync(request.MealId);
 
         if (mealToUpdate is null)
-            throw new KeyNotFoundException($"Meal with id {mealRequest.MealId} not found.");
+            throw new KeyNotFoundException($"Meal with id {request.MealId} not found.");
 
-        mealToUpdate.Name = mealRequest.Name;
-        mealToUpdate.Description = mealRequest.Description;
-        mealToUpdate.MealType = mealRequest.MealType;
-        mealToUpdate.Calories = mealRequest.Calories;
-        mealToUpdate.Protein = mealRequest.Protein;
-        mealToUpdate.Fat = mealRequest.Fat;
-        mealToUpdate.Carbs = mealRequest.Carbs;
-        mealToUpdate.IsFavorite = mealRequest.IsFavorite;
-        mealToUpdate.TimesEaten = mealRequest.TimesEaten;
-        mealToUpdate.LastDayEaten = mealRequest.LastDayEaten;
+        mealToUpdate.Name = request.Name;
+        mealToUpdate.Description = request.Description;
+        mealToUpdate.MealType = request.MealType;
+        mealToUpdate.Calories = request.Calories;
+        mealToUpdate.Protein = request.Protein;
+        mealToUpdate.Fat = request.Fat;
+        mealToUpdate.Carbs = request.Carbs;
+        mealToUpdate.IsFavorite = request.IsFavorite;
+        mealToUpdate.TimesEaten = request.TimesEaten;
+        mealToUpdate.LastDayEaten = request.LastDayEaten;
 
-        if (mealRequest.IngredientIds?.Any() == true)
+        if (request.IngredientIds?.Any() == true)
         {
             var ingredients = await _context.FoodItems
-                .Where(f => mealRequest.IngredientIds.Contains(f.FoodId))
+                .Where(f => request.IngredientIds.Contains(f.Id))
                 .ToListAsync();
 
-            var missing = mealRequest.IngredientIds.Except(ingredients.Select(f => f.FoodId)).ToList();
+            var missing = request.IngredientIds.Except(ingredients.Select(f => f.Id)).ToList();
             if (missing.Any())
                 _logger.LogWarning("Some Ingredient IDs were not found while updating meal: {Missing}", missing);
 
@@ -130,15 +130,15 @@ public class MealService : IMealService
             return MapToMealResponse(mealToUpdate);
         }
 
-        _logger.LogInformation("Meal with ID: {mealId} updated.", mealToUpdate.MealId);
+        _logger.LogInformation("Meal with ID: {mealId} updated.", mealToUpdate.Id);
         return MapToMealResponse(mealToUpdate);
     }
 
-    public async Task<bool> DeleteMealAsync(int? mealId)
+    public async Task<bool> DeleteAsync(int id)
     {
-        ArgumentNullException.ThrowIfNull(mealId);
+        ArgumentNullException.ThrowIfNull(id);
 
-        var meal = await _context.Meals.FindAsync(mealId);
+        var meal = await _context.Meals.FindAsync(id);
 
         if (meal is null)
             return false;
@@ -160,7 +160,7 @@ public class MealService : IMealService
             return false;
         }
 
-        _logger.LogInformation("Food with ID: {MealId} deleted.", meal.MealId);
+        _logger.LogInformation("Food with ID: {MealId} deleted.", meal.Id);
         return true;
     }
 
@@ -168,7 +168,7 @@ public class MealService : IMealService
     {
         return new MealResponse
         {
-            MealId = meal.MealId,
+            MealId = meal.Id,
             Name = meal.Name,
             Description = meal.Description,
             MealType = meal.MealType,
