@@ -111,7 +111,7 @@
 @code {
     [SupplyParameterFromForm] private AddFoodRequest Food { get; set; } = new();
     private List<Meal> _meals = new();
-    private IEnumerable<int> _selectedMealIds = [];
+    private IReadOnlyCollection<int> _selectedMealIds = Array.Empty<int>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -119,9 +119,9 @@
         _meals = await FoodService.GetAllMealsAsync();
     }
 
-    private Task OnSelectedMealsChanged(IEnumerable<int> values)
+    private Task OnSelectedMealsChanged(IReadOnlyCollection<int> values)
     {
-        _selectedMealIds = values ?? Enumerable.Empty<int>();
+        _selectedMealIds = values ?? Array.Empty<int>();
         return Task.CompletedTask;
     }
 

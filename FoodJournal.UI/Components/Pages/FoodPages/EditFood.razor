@@ -127,7 +127,7 @@
 
 @code {
     [Parameter] public int FoodId { get; set; }
-    private IEnumerable<int> _selectedMealIds = Enumerable.Empty<int>();
+    private IReadOnlyCollection<int> _selectedMealIds = Array.Empty<int>();
     private List<Meal> _meals = new();
     private bool _notFound;
     private List<string> _existingCategories = new();
@@ -170,9 +170,9 @@
         };
     }
 
-    private Task OnSelectedMealsChanged(IEnumerable<int> values)
+    private Task OnSelectedMealsChanged(IReadOnlyCollection<int> values)
     {
-        _selectedMealIds = values ?? Enumerable.Empty<int>();
+        _selectedMealIds = values ?? Array.Empty<int>();
         return Task.CompletedTask;
     }
 
