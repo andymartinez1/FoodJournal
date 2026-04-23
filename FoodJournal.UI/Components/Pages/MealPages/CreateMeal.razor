@@ -3,6 +3,7 @@
 @inject IFoodService FoodService
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
+@inject IWebHostEnvironment WebHostEnvironment
 @rendermode InteractiveServer
 
 <PageTitle>Create Meal</PageTitle>
@@ -61,6 +62,15 @@
                         <MudSelectItem Value="@f.FoodId">@f.Name (@f.Category)</MudSelectItem>
                     }
                 </MudSelect>
+
+                <div class="form-field">
+                    <MudText Typo="Typo.subtitle2">Meal photo</MudText>
+                    <InputFile OnChange="OnPhotoSelected" accept="image/*" />
+                    @if (!string.IsNullOrWhiteSpace(_selectedPhotoName))
+                    {
+                        <MudText Typo="Typo.caption">Selected: @_selectedPhotoName</MudText>
+                    }
+                </div>
             </div>
 
             <div class="form-card">
@@ -118,6 +128,9 @@
     [SupplyParameterFromForm] private AddMealRequest Meal { get; set; } = new();
     private List<FoodResponse> _foods = new();
     private IReadOnlyCollection<int> _selectedIngredientIds = Array.Empty<int>();
+    private IBrowserFile? _mealPhoto;
+    private string? _selectedPhotoName;
+    private const long MaxPhotoSizeBytes = 5 * 1024 * 1024;
 
     protected override async Task OnInitializedAsync()
     {
@@ -131,12 +144,58 @@
         return Task.CompletedTask;
     }
 
+    private void OnPhotoSelected(InputFileChangeEventArgs args)
+    {
+        _mealPhoto = args.File;
+        _selectedPhotoName = _mealPhoto?.Name;
+    }
+
     private async Task AddMeal()
     {
+        var imagePath = await SaveMealPhotoAsync();
+        if (_mealPhoto is not null && string.IsNullOrWhiteSpace(imagePath))
+            return;
+
+        Meal.ImagePath = imagePath;
         Meal.IngredientIds = _selectedIngredientIds?.ToList() ?? new List<int>();
         await MealService.AddAsync(Meal);
         Snackbar.Add($"{Meal.Name} added successfully!", Severity.Success);
         NavigationManager.NavigateTo("/meals");
+    }
+
+    private async Task<string?> SaveMealPhotoAsync()
+    {
+        if (_mealPhoto is null)
+            return null;
+
+        var extension = Path.GetExtension(_mealPhoto.Name);
+        var allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".webp", ".gif"
+        };
+
+        if (string.IsNullOrWhiteSpace(extension) || !allowedExtensions.Contains(extension))
+        {
+            Snackbar.Add("Please upload a valid image file (.jpg, .jpeg, .png, .webp, .gif).", Severity.Error);
+            return null;
+        }
+
+        if (_mealPhoto.Size > MaxPhotoSizeBytes)
+        {
+            Snackbar.Add("Image is too large. Maximum size is 5 MB.", Severity.Error);
+            return null;
+        }
+
+        var fileName = $"{Guid.NewGuid():N}{extension.ToLowerInvariant()}";
+        var imageDirectory = Path.Combine(WebHostEnvironment.WebRootPath, "img");
+        Directory.CreateDirectory(imageDirectory);
+
+        var filePath = Path.Combine(imageDirectory, fileName);
+        await using var readStream = _mealPhoto.OpenReadStream(MaxPhotoSizeBytes);
+        await using var writeStream = File.Create(filePath);
+        await readStream.CopyToAsync(writeStream);
+
+        return $"/img/{fileName}";
     }
 
     private void Home()

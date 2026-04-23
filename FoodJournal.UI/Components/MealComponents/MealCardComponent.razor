@@ -1,7 +1,7 @@
 <MudItem xs="12" sm="6" md="4">
     <MudCard Class="meal-card">
         <div class="image-wrap">
-            <MudImage Src="@ImagePathHelper.GetMealImagePath(MealResponse.Name)"
+            <MudImage Src="@GetImagePath()"
                       Alt="@MealResponse.Name"
                       Fluid="true"
                       Class="meal-image"/>
@@ -80,4 +80,11 @@
 
 @code {
     [Parameter] [EditorRequired] public MealResponse MealResponse { get; set; } = default!;
+
+    private string GetImagePath()
+    {
+        return string.IsNullOrWhiteSpace(MealResponse.ImagePath)
+            ? ImagePathHelper.GetMealImagePath(MealResponse.Name)
+            : MealResponse.ImagePath;
+    }
 }

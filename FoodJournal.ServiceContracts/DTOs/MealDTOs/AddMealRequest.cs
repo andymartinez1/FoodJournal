@@ -24,6 +24,8 @@ public class AddMealRequest
 
     public DateOnly LastDayEaten { get; set; }
 
+    public string? ImagePath { get; set; }
+
     public List<int> IngredientIds { get; set; } = new();
 
     public List<Food> Ingredients { get; set; } = new();

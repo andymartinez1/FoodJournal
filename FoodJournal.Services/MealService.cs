@@ -54,8 +54,8 @@ public class MealService : IMealService
     {
         ArgumentNullException.ThrowIfNull(id);
 
-        var meal = await _context.Meals
-            .Include(m => m.Ingredients)
+        var meal = await _context
+            .Meals.Include(m => m.Ingredients)
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -68,10 +68,7 @@ public class MealService : IMealService
 
     public async Task<List<MealResponse>> GetAllAsync()
     {
-        var meals = await _context.Meals
-            .Include(m => m.Ingredients)
-            .AsNoTracking()
-            .ToListAsync();
+        var meals = await _context.Meals.Include(m => m.Ingredients).AsNoTracking().ToListAsync();
 
         return meals.Select(MapToMealResponse).ToList();
     }
@@ -95,16 +92,20 @@ public class MealService : IMealService
         mealToUpdate.IsFavorite = request.IsFavorite;
         mealToUpdate.TimesEaten = request.TimesEaten;
         mealToUpdate.LastDayEaten = request.LastDayEaten;
+        mealToUpdate.ImagePath = request.ImagePath;
 
         if (request.IngredientIds?.Any() == true)
         {
-            var ingredients = await _context.FoodItems
-                .Where(f => request.IngredientIds.Contains(f.Id))
+            var ingredients = await _context
+                .FoodItems.Where(f => request.IngredientIds.Contains(f.Id))
                 .ToListAsync();
 
             var missing = request.IngredientIds.Except(ingredients.Select(f => f.Id)).ToList();
             if (missing.Any())
-                _logger.LogWarning("Some Ingredient IDs were not found while updating meal: {Missing}", missing);
+                _logger.LogWarning(
+                    "Some Ingredient IDs were not found while updating meal: {Missing}",
+                    missing
+                );
 
             mealToUpdate.Ingredients = ingredients;
         }
@@ -179,7 +180,8 @@ public class MealService : IMealService
             IsFavorite = meal.IsFavorite,
             TimesEaten = meal.TimesEaten,
             LastDayEaten = meal.LastDayEaten,
-            Ingredients = meal.Ingredients
+            ImagePath = meal.ImagePath,
+            Ingredients = meal.Ingredients,
         };
     }
 
@@ -197,7 +199,8 @@ public class MealService : IMealService
             IsFavorite = request.IsFavorite,
             TimesEaten = request.TimesEaten,
             LastDayEaten = request.LastDayEaten,
-            Ingredients = request.Ingredients
+            ImagePath = request.ImagePath,
+            Ingredients = request.Ingredients,
         };
     }
 }
