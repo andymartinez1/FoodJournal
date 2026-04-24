@@ -13,6 +13,7 @@ builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<IMealService, MealService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 var connectionString =
     builder.Configuration.GetConnectionString("DefaultConnection")

@@ -26,7 +26,7 @@ public class FoodServiceTests
     }
 
     [Fact]
-    public async Task AddFood_IfNotNull_ReturnsFoodResponse()
+    public async Task AddFood_WhenRequestIsValid_ReturnsNotNullResult()
     {
         // Arrange
         var request = new AddFoodRequest
@@ -44,7 +44,41 @@ public class FoodServiceTests
 
         // Assert
         Assert.NotNull(result);
+    }
+
+    [Fact]
+    public async Task AddFood_WhenRequestIsValid_MapsNameFromRequest()
+    {
+        var request = new AddFoodRequest
+        {
+            Name = "Apple",
+            Category = FoodCategory.Fruit,
+            Calories = 52,
+            Protein = 0.3,
+            Fat = 0.2,
+            Carbs = 14,
+        };
+
+        var result = await _foodService.AddAsync(request);
+
         Assert.Equal(request.Name, result.Name);
+    }
+
+    [Fact]
+    public async Task AddFood_WhenRequestIsValid_MapsCategoryFromRequest()
+    {
+        var request = new AddFoodRequest
+        {
+            Name = "Apple",
+            Category = FoodCategory.Fruit,
+            Calories = 52,
+            Protein = 0.3,
+            Fat = 0.2,
+            Carbs = 14,
+        };
+
+        var result = await _foodService.AddAsync(request);
+
         Assert.Equal(request.Category.ToString(), result.Category);
     }
 
@@ -115,7 +149,7 @@ public class FoodServiceTests
     }
 
     [Fact]
-    public async Task GetAllFood_ReturnsAllPersistedFoodItems()
+    public async Task GetAllFood_WhenFoodsExist_ReturnsCorrectCount()
     {
         _dbContext.FoodItems.AddRange(
             new Food { Name = "Bread", Category = FoodCategory.Grain.ToString() },
@@ -126,12 +160,38 @@ public class FoodServiceTests
         var result = await _foodService.GetAllAsync();
 
         Assert.Equal(2, result.Count);
+    }
+
+    [Fact]
+    public async Task GetAllFood_WhenFoodsExist_ContainsBread()
+    {
+        _dbContext.FoodItems.AddRange(
+            new Food { Name = "Bread", Category = FoodCategory.Grain.ToString() },
+            new Food { Name = "Milk", Category = FoodCategory.Dairy.ToString() }
+        );
+        await _dbContext.SaveChangesAsync();
+
+        var result = await _foodService.GetAllAsync();
+
         Assert.Contains(result, f => f.Name == "Bread");
+    }
+
+    [Fact]
+    public async Task GetAllFood_WhenFoodsExist_ContainsMilk()
+    {
+        _dbContext.FoodItems.AddRange(
+            new Food { Name = "Bread", Category = FoodCategory.Grain.ToString() },
+            new Food { Name = "Milk", Category = FoodCategory.Dairy.ToString() }
+        );
+        await _dbContext.SaveChangesAsync();
+
+        var result = await _foodService.GetAllAsync();
+
         Assert.Contains(result, f => f.Name == "Milk");
     }
 
     [Fact]
-    public async Task UpdateFood_WhenRequestValid_UpdatesPersistedValues()
+    public async Task UpdateFood_WhenRequestValid_UpdatesReturnedEntity()
     {
         var breakfast = new Meal { Name = "Breakfast", MealType = MealType.Breakfast };
         var lunch = new Meal { Name = "Lunch", MealType = MealType.Lunch };
@@ -158,13 +218,100 @@ public class FoodServiceTests
 
         Assert.NotNull(result);
         Assert.Equal("Oats Updated", result!.Name);
-        Assert.Single(result.Meals);
+    }
+
+    [Fact]
+    public async Task UpdateFood_WhenRequestValid_AssignsExistingMealsOnReturnedEntity()
+    {
+        var breakfast = new Meal { Name = "Breakfast", MealType = MealType.Breakfast };
+        var lunch = new Meal { Name = "Lunch", MealType = MealType.Lunch };
+        var food = new Food { Name = "Oats", Category = FoodCategory.Grain.ToString() };
+
+        _dbContext.Meals.AddRange(breakfast, lunch);
+        _dbContext.FoodItems.Add(food);
+        await _dbContext.SaveChangesAsync();
+
+        var request = new UpdateFoodRequest
+        {
+            FoodId = food.Id,
+            Name = "Oats Updated",
+            Category = FoodCategory.Grain.ToString(),
+            Calories = 389,
+            Protein = 16.9,
+            Fat = 6.9,
+            Carbs = 66.3,
+            MealIds = new List<int> { breakfast.Id, 99999 },
+            Meals = new List<Meal>(),
+        };
+
+        var result = await _foodService.UpdateAsync(request);
+
+        Assert.NotNull(result);
+        Assert.Single(result!.Meals);
         Assert.Equal(breakfast.Id, result.Meals[0].Id);
+    }
+
+    [Fact]
+    public async Task UpdateFood_WhenRequestValid_UpdatesPersistedEntityName()
+    {
+        var breakfast = new Meal { Name = "Breakfast", MealType = MealType.Breakfast };
+        var lunch = new Meal { Name = "Lunch", MealType = MealType.Lunch };
+        var food = new Food { Name = "Oats", Category = FoodCategory.Grain.ToString() };
+
+        _dbContext.Meals.AddRange(breakfast, lunch);
+        _dbContext.FoodItems.Add(food);
+        await _dbContext.SaveChangesAsync();
+
+        var request = new UpdateFoodRequest
+        {
+            FoodId = food.Id,
+            Name = "Oats Updated",
+            Category = FoodCategory.Grain.ToString(),
+            Calories = 389,
+            Protein = 16.9,
+            Fat = 6.9,
+            Carbs = 66.3,
+            MealIds = new List<int> { breakfast.Id, 99999 },
+            Meals = new List<Meal>(),
+        };
+
+        await _foodService.UpdateAsync(request);
 
         var persisted = await _dbContext
             .FoodItems.Include(f => f.Meals)
             .FirstAsync(f => f.Id == food.Id);
         Assert.Equal("Oats Updated", persisted.Name);
+    }
+
+    [Fact]
+    public async Task UpdateFood_WhenRequestValid_AssignsExistingMealsOnPersistedEntity()
+    {
+        var breakfast = new Meal { Name = "Breakfast", MealType = MealType.Breakfast };
+        var lunch = new Meal { Name = "Lunch", MealType = MealType.Lunch };
+        var food = new Food { Name = "Oats", Category = FoodCategory.Grain.ToString() };
+
+        _dbContext.Meals.AddRange(breakfast, lunch);
+        _dbContext.FoodItems.Add(food);
+        await _dbContext.SaveChangesAsync();
+
+        var request = new UpdateFoodRequest
+        {
+            FoodId = food.Id,
+            Name = "Oats Updated",
+            Category = FoodCategory.Grain.ToString(),
+            Calories = 389,
+            Protein = 16.9,
+            Fat = 6.9,
+            Carbs = 66.3,
+            MealIds = new List<int> { breakfast.Id, 99999 },
+            Meals = new List<Meal>(),
+        };
+
+        await _foodService.UpdateAsync(request);
+
+        var persisted = await _dbContext
+            .FoodItems.Include(f => f.Meals)
+            .FirstAsync(f => f.Id == food.Id);
         Assert.Single(persisted.Meals);
     }
 

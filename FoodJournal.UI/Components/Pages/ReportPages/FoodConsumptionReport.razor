@@ -1,0 +1,137 @@
+﻿@page "/reports/food-consumption"
+@using FoodJournal.ServiceContracts
+@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
+@using FoodJournal.ServiceContracts.DTOs.ReportDTOs
+@inject IFoodService FoodService
+@inject IReportService ReportService
+
+<PageTitle>Food Consumption Report</PageTitle>
+
+<MudPaper Class="pa-6 d-flex flex-column gap-4" Elevation="1">
+    <MudText Typo="Typo.h5">Food Consumption Report</MudText>
+
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudSelect T="int" Label="Food" @bind-Value="_selectedFoodId">
+                @foreach (var food in _foods)
+                {
+                    <MudSelectItem T="int" Value="@food.FoodId">@food.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="From" Date="@_fromDate" DateChanged="OnFromDateChanged" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="To" Date="@_toDate" DateChanged="OnToDateChanged" />
+        </MudItem>
+        <MudItem xs="12" md="2" Class="d-flex align-end">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GenerateReport" FullWidth="true">
+                Generate
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+
+    <MudDivider />
+
+    <MudGrid>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="Consumed On" Date="@_consumedOn" DateChanged="OnConsumedOnChanged" />
+        </MudItem>
+        <MudItem xs="12" md="3" Class="d-flex align-end">
+            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="LogConsumption" FullWidth="true">
+                Log Consumption
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+
+    @if (!string.IsNullOrWhiteSpace(_message))
+    {
+        <MudAlert Severity="@_messageSeverity">@_message</MudAlert>
+    }
+
+    @if (_report is not null)
+    {
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudText Typo="Typo.h6">@_report.FoodName</MudText>
+            <MudText Typo="Typo.body1">Period: @_report.FromDate.ToString("yyyy-MM-dd") - @_report.ToDate.ToString("yyyy-MM-dd")</MudText>
+            <MudText Typo="Typo.body1">Times consumed: @_report.TimesConsumed</MudText>
+        </MudPaper>
+    }
+</MudPaper>
+
+@code {
+    private List<FoodResponse> _foods = new();
+    private int _selectedFoodId;
+    private DateTime? _fromDate = DateTime.Today.AddDays(-7);
+    private DateTime? _toDate = DateTime.Today;
+    private DateTime? _consumedOn = DateTime.Today;
+    private FoodConsumptionReportResponse? _report;
+    private string? _message;
+    private Severity _messageSeverity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _foods = await FoodService.GetAllAsync();
+        _selectedFoodId = _foods.FirstOrDefault()?.FoodId ?? 0;
+    }
+
+    private async Task GenerateReport()
+    {
+        await RunWithHandling(async () =>
+        {
+            var request = new FoodConsumptionReportRequest
+            {
+                FoodId = _selectedFoodId,
+                FromDate = DateOnly.FromDateTime(_fromDate?.Date ?? DateTime.Today),
+                ToDate = DateOnly.FromDateTime(_toDate?.Date ?? DateTime.Today),
+            };
+
+            _report = await ReportService.GetFoodConsumptionReportAsync(request);
+        });
+    }
+
+    private async Task LogConsumption()
+    {
+        await RunWithHandling(async () =>
+        {
+            var consumedOn = DateOnly.FromDateTime(_consumedOn?.Date ?? DateTime.Today);
+            await ReportService.LogFoodConsumptionAsync(_selectedFoodId, consumedOn);
+            _message = "Consumption logged.";
+            _messageSeverity = Severity.Success;
+            await GenerateReport();
+        });
+    }
+
+    private async Task RunWithHandling(Func<Task> operation)
+    {
+        try
+        {
+            _message = null;
+            await operation();
+        }
+        catch (Exception ex)
+        {
+            _message = ex.Message;
+            _messageSeverity = Severity.Error;
+        }
+    }
+
+    private Task OnFromDateChanged(DateTime? value)
+    {
+        _fromDate = value;
+        return Task.CompletedTask;
+    }
+
+    private Task OnToDateChanged(DateTime? value)
+    {
+        _toDate = value;
+        return Task.CompletedTask;
+    }
+
+    private Task OnConsumedOnChanged(DateTime? value)
+    {
+        _consumedOn = value;
+        return Task.CompletedTask;
+    }
+}
