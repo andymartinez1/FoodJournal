@@ -1,11 +1,13 @@
 ﻿@page "/reports/food-consumption"
 @using FoodJournal.ServiceContracts
 @using FoodJournal.ServiceContracts.DTOs.FoodDTOs
+@using FoodJournal.ServiceContracts.DTOs.MealDTOs
 @using FoodJournal.ServiceContracts.DTOs.ReportDTOs
 @inject IFoodService FoodService
+@inject IMealService MealService
 @inject IReportService ReportService
 
-<PageTitle>Food Consumption Report</PageTitle>
+<PageTitle>Consumption Reports</PageTitle>
 
 <MudPaper Class="pa-6 d-flex flex-column gap-4" Elevation="1">
     <MudText Typo="Typo.h5">Food Consumption Report</MudText>
@@ -34,13 +36,26 @@
 
     <MudDivider />
 
+    <MudText Typo="Typo.h5">Meal Consumption Report</MudText>
+
     <MudGrid>
-        <MudItem xs="12" md="3">
-            <MudDatePicker Label="Consumed On" Date="@_consumedOn" DateChanged="OnConsumedOnChanged" />
+        <MudItem xs="12" md="4">
+            <MudSelect T="int" Label="Meal" @bind-Value="_selectedMealId">
+                @foreach (var meal in _meals)
+                {
+                    <MudSelectItem T="int" Value="@meal.MealId">@meal.Name</MudSelectItem>
+                }
+            </MudSelect>
         </MudItem>
-        <MudItem xs="12" md="3" Class="d-flex align-end">
-            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="LogConsumption" FullWidth="true">
-                Log Consumption
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="From" Date="@_mealFromDate" DateChanged="OnMealFromDateChanged" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="To" Date="@_mealToDate" DateChanged="OnMealToDateChanged" />
+        </MudItem>
+        <MudItem xs="12" md="2" Class="d-flex align-end">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GenerateMealReport" FullWidth="true">
+                Generate
             </MudButton>
         </MudItem>
     </MudGrid>
@@ -58,22 +73,37 @@
             <MudText Typo="Typo.body1">Times consumed: @_report.TimesConsumed</MudText>
         </MudPaper>
     }
+
+    @if (_mealReport is not null)
+    {
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudText Typo="Typo.h6">@_mealReport.MealName</MudText>
+            <MudText Typo="Typo.body1">Period: @_mealReport.FromDate.ToString("yyyy-MM-dd") - @_mealReport.ToDate.ToString("yyyy-MM-dd")</MudText>
+            <MudText Typo="Typo.body1">Times consumed: @_mealReport.TimesConsumed</MudText>
+        </MudPaper>
+    }
 </MudPaper>
 
 @code {
     private List<FoodResponse> _foods = new();
+    private List<MealResponse> _meals = new();
     private int _selectedFoodId;
+    private int _selectedMealId;
     private DateTime? _fromDate = DateTime.Today.AddDays(-7);
     private DateTime? _toDate = DateTime.Today;
-    private DateTime? _consumedOn = DateTime.Today;
+    private DateTime? _mealFromDate = DateTime.Today.AddDays(-7);
+    private DateTime? _mealToDate = DateTime.Today;
     private FoodConsumptionReportResponse? _report;
+    private MealConsumptionReportResponse? _mealReport;
     private string? _message;
     private Severity _messageSeverity;
 
     protected override async Task OnInitializedAsync()
     {
         _foods = await FoodService.GetAllAsync();
+        _meals = await MealService.GetAllAsync();
         _selectedFoodId = _foods.FirstOrDefault()?.FoodId ?? 0;
+        _selectedMealId = _meals.FirstOrDefault()?.MealId ?? 0;
     }
 
     private async Task GenerateReport()
@@ -91,15 +121,18 @@
         });
     }
 
-    private async Task LogConsumption()
+    private async Task GenerateMealReport()
     {
         await RunWithHandling(async () =>
         {
-            var consumedOn = DateOnly.FromDateTime(_consumedOn?.Date ?? DateTime.Today);
-            await ReportService.LogFoodConsumptionAsync(_selectedFoodId, consumedOn);
-            _message = "Consumption logged.";
-            _messageSeverity = Severity.Success;
-            await GenerateReport();
+            var request = new MealConsumptionReportRequest
+            {
+                MealId = _selectedMealId,
+                FromDate = DateOnly.FromDateTime(_mealFromDate?.Date ?? DateTime.Today),
+                ToDate = DateOnly.FromDateTime(_mealToDate?.Date ?? DateTime.Today),
+            };
+
+            _mealReport = await ReportService.GetMealConsumptionReportAsync(request);
         });
     }
 
@@ -129,9 +162,15 @@
         return Task.CompletedTask;
     }
 
-    private Task OnConsumedOnChanged(DateTime? value)
+    private Task OnMealFromDateChanged(DateTime? value)
     {
-        _consumedOn = value;
+        _mealFromDate = value;
+        return Task.CompletedTask;
+    }
+
+    private Task OnMealToDateChanged(DateTime? value)
+    {
+        _mealToDate = value;
         return Task.CompletedTask;
     }
 }

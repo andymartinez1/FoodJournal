@@ -1,5 +1,6 @@
 ﻿@page "/foods"
 @inject IFoodService FoodService
+@inject IReportService ReportService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -152,6 +153,8 @@
 
     private async Task Details(int foodId)
     {
+        await ReportService.LogFoodConsumptionAsync(foodId, DateOnly.FromDateTime(DateTime.Today));
+
         var food = await FoodService.GetByIdAsync(foodId);
 
         var parameters = new DialogParameters<FoodDetailsDialogComponent> { { "Food", food } };

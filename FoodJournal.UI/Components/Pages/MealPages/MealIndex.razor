@@ -1,7 +1,9 @@
 @page "/meals"
 @inject IMealService MealService
+@inject IReportService ReportService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 @rendermode InteractiveServer
 
 <PageTitle>Meals</PageTitle>
@@ -74,7 +76,7 @@
         <MudGrid>
             @foreach (var meal in PagedMeals)
             {
-                <MealCardComponent MealResponse="meal"/>
+                <MealCardComponent MealResponse="meal" OnViewClicked="TrackMealConsumption" OnEditClicked="Edit"/>
             }
         </MudGrid>
 
@@ -152,6 +154,17 @@
     private void Create()
     {
         NavigationManager.NavigateTo("/meals/create");
+    }
+
+    private async Task TrackMealConsumption(int mealId)
+    {
+        await ReportService.LogMealConsumptionAsync(mealId, DateOnly.FromDateTime(DateTime.Today));
+        Snackbar.Add("Meal consumption tracked.", Severity.Success);
+    }
+
+    private void Edit(int mealId)
+    {
+        NavigationManager.NavigateTo($"/meals/edit/{mealId}");
     }
 
 }

@@ -29,6 +29,20 @@ public class ReportService : IReportService
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task LogMealConsumptionAsync(int mealId, DateOnly consumedOn)
+    {
+        var mealExists = await _dbContext.Meals.AnyAsync(meal => meal.Id == mealId);
+        if (!mealExists)
+        {
+            throw new InvalidOperationException("Meal not found.");
+        }
+
+        var entry = new MealConsumptionEntry { MealId = mealId, ConsumedOn = consumedOn };
+
+        _dbContext.MealConsumptionEntries.Add(entry);
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task<FoodConsumptionReportResponse> GetFoodConsumptionReportAsync(
         FoodConsumptionReportRequest request
     )
@@ -56,6 +70,37 @@ public class ReportService : IReportService
         {
             FoodId = request.FoodId,
             FoodName = food.Name,
+            FromDate = request.FromDate,
+            ToDate = request.ToDate,
+            TimesConsumed = timesConsumed,
+        };
+    }
+
+    public async Task<MealConsumptionReportResponse> GetMealConsumptionReportAsync(
+        MealConsumptionReportRequest request
+    )
+    {
+        if (request.FromDate > request.ToDate)
+        {
+            throw new ArgumentException("FromDate cannot be later than ToDate.");
+        }
+
+        var meal = await _dbContext.Meals.FirstOrDefaultAsync(item => item.Id == request.MealId);
+        if (meal is null)
+        {
+            throw new InvalidOperationException("Meal not found.");
+        }
+
+        var timesConsumed = await _dbContext.MealConsumptionEntries.CountAsync(entry =>
+            entry.MealId == request.MealId
+            && entry.ConsumedOn >= request.FromDate
+            && entry.ConsumedOn <= request.ToDate
+        );
+
+        return new MealConsumptionReportResponse
+        {
+            MealId = request.MealId,
+            MealName = meal.Name,
             FromDate = request.FromDate,
             ToDate = request.ToDate,
             TimesConsumed = timesConsumed,

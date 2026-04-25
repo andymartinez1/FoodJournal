@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Food> FoodItems { get; set; }
     public DbSet<Meal> Meals { get; set; }
     public DbSet<FoodConsumptionEntry> FoodConsumptionEntries { get; set; }
+    public DbSet<MealConsumptionEntry> MealConsumptionEntries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,6 +42,13 @@ public class ApplicationDbContext : DbContext
             .HasOne(entry => entry.Food)
             .WithMany()
             .HasForeignKey(entry => entry.FoodId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder
+            .Entity<MealConsumptionEntry>()
+            .HasOne(entry => entry.Meal)
+            .WithMany()
+            .HasForeignKey(entry => entry.MealId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
