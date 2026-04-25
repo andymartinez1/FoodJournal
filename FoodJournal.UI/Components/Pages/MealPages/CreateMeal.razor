@@ -65,7 +65,7 @@
 
                 <div class="form-field">
                     <MudText Typo="Typo.subtitle2">Meal photo</MudText>
-                    <InputFile OnChange="OnPhotoSelected" accept="image/*" />
+                    <InputFile OnChange="OnPhotoSelected" accept="image/*"/>
                     @if (!string.IsNullOrWhiteSpace(_selectedPhotoName))
                     {
                         <MudText Typo="Typo.caption">Selected: @_selectedPhotoName</MudText>
