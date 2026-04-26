@@ -1,0 +1,250 @@
+﻿@page "/meals/edit/{MealId:int}"
+@inject IMealService MealService
+@inject IFoodService FoodService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IWebHostEnvironment WebHostEnvironment
+@rendermode InteractiveServer
+
+<PageTitle>Edit Meal</PageTitle>
+
+<div class="edit-page">
+    <div class="page-header">
+        <div>
+            <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack"
+                       Class="back-btn" OnClick="@Home">Meals
+            </MudButton>
+            <h1 class="page-title">Edit Meal</h1>
+            <p class="page-subtitle">Update the details for this meal</p>
+        </div>
+    </div>
+
+    @if (_notFound)
+    {
+        <div class="not-found">
+            <MudIcon Icon="@Icons.Material.Outlined.SearchOff" Style="font-size:3rem;color:#94a3b8;"/>
+            <p>Meal not found.</p>
+            <MudButton Variant="Variant.Outlined" OnClick="@Home">Back to Meals</MudButton>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="Meal" OnValidSubmit="UpdateMeal">
+            <DataAnnotationsValidator/>
+
+            <div class="form-layout">
+                <div class="form-card">
+                    <div class="form-section-title">
+                        <MudIcon Icon="@Icons.Material.Outlined.Info" Class="section-icon"/>
+                        Basic Info
+                    </div>
+
+                    <MudTextField Label="Meal name"
+                                  @bind-Value="Meal.Name"
+                                  For="@(() => Meal.Name)"
+                                  Variant="Variant.Outlined"
+                                  Class="form-field"/>
+
+                    <MudTextField Label="Description"
+                                  @bind-Value="Meal.Description"
+                                  For="@(() => Meal.Description)"
+                                  Variant="Variant.Outlined"
+                                  Lines="3"
+                                  Class="form-field"/>
+
+                    <MudSelect Label="Meal type"
+                               @bind-Value="Meal.MealType"
+                               For="@(() => Meal.MealType)"
+                               Variant="Variant.Outlined"
+                               Class="form-field">
+                        @foreach (MealType type in Enum.GetValues(typeof(MealType)))
+                        {
+                            <MudSelectItem Value="@type">@type</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="int" Label="Ingredients"
+                               MultiSelection="true"
+                               Variant="Variant.Outlined"
+                               SelectedValues="_selectedIngredientIds"
+                               SelectedValuesChanged="OnSelectedIngredientsChanged"
+                               Class="form-field">
+                        @foreach (var f in _foods)
+                        {
+                            <MudSelectItem Value="@f.FoodId">@f.Name (@f.Category)</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <div class="form-field">
+                        <MudText Typo="Typo.subtitle2">Meal photo</MudText>
+                        <InputFile OnChange="OnPhotoSelected" accept="image/*"/>
+                        @if (!string.IsNullOrWhiteSpace(_selectedPhotoName))
+                        {
+                            <MudText Typo="Typo.caption">Selected: @_selectedPhotoName</MudText>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-section-title">
+                        <MudIcon Icon="@Icons.Material.Outlined.LocalFireDepartment" Class="section-icon"/>
+                        Nutrition
+                    </div>
+
+                    <div class="nutrition-grid">
+                        <div class="nutrient-field cal-field">
+                            <MudTextField Label="Calories (kcal)"
+                                          @bind-Value="Meal.Calories"
+                                          For="@(() => Meal.Calories)"
+                                          Variant="Variant.Outlined"/>
+                        </div>
+                        <div class="nutrient-field prot-field">
+                            <MudTextField Label="Protein (g)"
+                                          @bind-Value="Meal.Protein"
+                                          For="@(() => Meal.Protein)"
+                                          Variant="Variant.Outlined"/>
+                        </div>
+                        <div class="nutrient-field fat-field">
+                            <MudTextField Label="Fat (g)"
+                                          @bind-Value="Meal.Fat"
+                                          For="@(() => Meal.Fat)"
+                                          Variant="Variant.Outlined"/>
+                        </div>
+                        <div class="nutrient-field carb-field">
+                            <MudTextField Label="Carbs (g)"
+                                          @bind-Value="Meal.Carbs"
+                                          For="@(() => Meal.Carbs)"
+                                          Variant="Variant.Outlined"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close"
+                               Class="cancel-btn" OnClick="@Home">
+                        Cancel
+                    </MudButton>
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save"
+                               Class="submit-btn">
+                        Save Changes
+                    </MudButton>
+                </div>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter] public int MealId { get; set; }
+
+    private UpdateMealRequest Meal { get; set; } = new();
+    private List<FoodResponse> _foods = new();
+    private IReadOnlyCollection<int> _selectedIngredientIds = Array.Empty<int>();
+    private IBrowserFile? _mealPhoto;
+    private string? _selectedPhotoName;
+    private bool _notFound;
+    private const long MaxPhotoSizeBytes = 5 * 1024 * 1024;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _foods = await FoodService.GetAllAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _notFound = false;
+
+        var mealResponse = await MealService.GetByIdAsync(MealId);
+        if (mealResponse is null)
+        {
+            _notFound = true;
+            return;
+        }
+
+        Meal = new UpdateMealRequest
+        {
+            MealId = mealResponse.MealId,
+            Name = mealResponse.Name,
+            Description = mealResponse.Description,
+            MealType = mealResponse.MealType,
+            Calories = mealResponse.Calories,
+            Protein = mealResponse.Protein,
+            Fat = mealResponse.Fat,
+            Carbs = mealResponse.Carbs,
+            IsFavorite = mealResponse.IsFavorite,
+            TimesEaten = mealResponse.TimesEaten,
+            LastDayEaten = mealResponse.LastDayEaten,
+            ImagePath = mealResponse.ImagePath,
+            IngredientIds = mealResponse.Ingredients?.Select(i => i.Id).ToList() ?? new List<int>()
+        };
+
+        _selectedIngredientIds = Meal.IngredientIds;
+    }
+
+    private Task OnSelectedIngredientsChanged(IReadOnlyCollection<int> values)
+    {
+        _selectedIngredientIds = values ?? Array.Empty<int>();
+        return Task.CompletedTask;
+    }
+
+    private void OnPhotoSelected(InputFileChangeEventArgs args)
+    {
+        _mealPhoto = args.File;
+        _selectedPhotoName = _mealPhoto?.Name;
+    }
+
+    private async Task UpdateMeal()
+    {
+        var imagePath = await SaveMealPhotoAsync();
+        if (_mealPhoto is not null && string.IsNullOrWhiteSpace(imagePath))
+            return;
+
+        Meal.ImagePath = imagePath ?? Meal.ImagePath;
+        Meal.IngredientIds = _selectedIngredientIds?.ToList() ?? new List<int>();
+        await MealService.UpdateAsync(Meal);
+        Snackbar.Add($"{Meal.Name} updated successfully!", Severity.Success);
+        NavigationManager.NavigateTo("/meals");
+    }
+
+    private async Task<string?> SaveMealPhotoAsync()
+    {
+        if (_mealPhoto is null)
+            return null;
+
+        var extension = Path.GetExtension(_mealPhoto.Name);
+        var allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".webp", ".gif"
+        };
+
+        if (string.IsNullOrWhiteSpace(extension) || !allowedExtensions.Contains(extension))
+        {
+            Snackbar.Add("Please upload a valid image file (.jpg, .jpeg, .png, .webp, .gif).", Severity.Error);
+            return null;
+        }
+
+        if (_mealPhoto.Size > MaxPhotoSizeBytes)
+        {
+            Snackbar.Add("Image is too large. Maximum size is 5 MB.", Severity.Error);
+            return null;
+        }
+
+        var fileName = $"{Guid.NewGuid():N}{extension.ToLowerInvariant()}";
+        var imageDirectory = Path.Combine(WebHostEnvironment.WebRootPath, "img");
+        Directory.CreateDirectory(imageDirectory);
+
+        var filePath = Path.Combine(imageDirectory, fileName);
+        await using var readStream = _mealPhoto.OpenReadStream(MaxPhotoSizeBytes);
+        await using var writeStream = File.Create(filePath);
+        await readStream.CopyToAsync(writeStream);
+
+        return $"/img/{fileName}";
+    }
+
+    private void Home()
+    {
+        NavigationManager.NavigateTo("/meals");
+    }
+}

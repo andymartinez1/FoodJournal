@@ -77,7 +77,9 @@ public class MealService : IMealService
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var mealToUpdate = await _context.Meals.FindAsync(request.MealId);
+        var mealToUpdate = await _context
+            .Meals.Include(m => m.Ingredients)
+            .FirstOrDefaultAsync(m => m.Id == request.MealId);
 
         if (mealToUpdate is null)
             throw new KeyNotFoundException($"Meal with id {request.MealId} not found.");
