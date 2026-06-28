@@ -183,7 +183,7 @@ public class MealService : IMealService
             TimesEaten = meal.TimesEaten,
             LastDayEaten = meal.LastDayEaten,
             ImagePath = meal.ImagePath,
-            Ingredients = meal.Ingredients,
+            Ingredients = meal.Ingredients
         };
     }
 
@@ -202,7 +202,7 @@ public class MealService : IMealService
             TimesEaten = request.TimesEaten,
             LastDayEaten = request.LastDayEaten,
             ImagePath = request.ImagePath,
-            Ingredients = request.Ingredients,
+            Ingredients = request.Ingredients
         };
     }
 }

@@ -6,7 +6,9 @@ namespace FoodJournal.Data;
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options) { }
+        : base(options)
+    {
+    }
 
     public DbSet<Food> FoodItems { get; set; }
     public DbSet<Meal> Meals { get; set; }

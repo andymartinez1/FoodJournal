@@ -36,7 +36,7 @@ public class FoodServiceTests
             Calories = 52,
             Protein = 0.3,
             Fat = 0.2,
-            Carbs = 14,
+            Carbs = 14
         };
 
         // Act
@@ -56,7 +56,7 @@ public class FoodServiceTests
             Calories = 52,
             Protein = 0.3,
             Fat = 0.2,
-            Carbs = 14,
+            Carbs = 14
         };
 
         var result = await _foodService.AddAsync(request);
@@ -74,7 +74,7 @@ public class FoodServiceTests
             Calories = 52,
             Protein = 0.3,
             Fat = 0.2,
-            Carbs = 14,
+            Carbs = 14
         };
 
         var result = await _foodService.AddAsync(request);
@@ -95,7 +95,7 @@ public class FoodServiceTests
         {
             Name = "Rice",
             Category = FoodCategory.Grain,
-            MealIds = new List<int> { breakfast.Id, 9999 },
+            MealIds = new List<int> { breakfast.Id, 9999 }
         };
 
         // Act
@@ -211,7 +211,7 @@ public class FoodServiceTests
             Fat = 6.9,
             Carbs = 66.3,
             MealIds = new List<int> { breakfast.Id, 99999 },
-            Meals = new List<Meal>(),
+            Meals = new List<Meal>()
         };
 
         var result = await _foodService.UpdateAsync(request);
@@ -241,7 +241,7 @@ public class FoodServiceTests
             Fat = 6.9,
             Carbs = 66.3,
             MealIds = new List<int> { breakfast.Id, 99999 },
-            Meals = new List<Meal>(),
+            Meals = new List<Meal>()
         };
 
         var result = await _foodService.UpdateAsync(request);
@@ -272,7 +272,7 @@ public class FoodServiceTests
             Fat = 6.9,
             Carbs = 66.3,
             MealIds = new List<int> { breakfast.Id, 99999 },
-            Meals = new List<Meal>(),
+            Meals = new List<Meal>()
         };
 
         await _foodService.UpdateAsync(request);
@@ -304,7 +304,7 @@ public class FoodServiceTests
             Fat = 6.9,
             Carbs = 66.3,
             MealIds = new List<int> { breakfast.Id, 99999 },
-            Meals = new List<Meal>(),
+            Meals = new List<Meal>()
         };
 
         await _foodService.UpdateAsync(request);

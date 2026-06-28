@@ -31,7 +31,7 @@ public class MealServiceTests
         {
             Name = "Pasta Bowl",
             MealType = MealType.Dinner,
-            ImagePath = "/img/pasta.png",
+            ImagePath = "/img/pasta.png"
         };
 
         var result = await _mealService.AddAsync(request);
@@ -57,7 +57,7 @@ public class MealServiceTests
             MealId = meal.Id,
             Name = meal.Name,
             MealType = meal.MealType,
-            IngredientIds = new List<int> { ingredientA.Id, 99999 },
+            IngredientIds = new List<int> { ingredientA.Id, 99999 }
         };
 
         var result = await _mealService.UpdateAsync(request);
@@ -75,13 +75,13 @@ public class MealServiceTests
             {
                 Name = "Toast",
                 MealType = MealType.Breakfast,
-                ImagePath = "/img/toast.png",
+                ImagePath = "/img/toast.png"
             },
             new Meal
             {
                 Name = "Soup",
                 MealType = MealType.Lunch,
-                ImagePath = "/img/soup.png",
+                ImagePath = "/img/soup.png"
             }
         );
         await _dbContext.SaveChangesAsync();
@@ -100,7 +100,7 @@ public class MealServiceTests
         {
             Name = "Salad",
             MealType = MealType.Lunch,
-            ImagePath = "/img/salad.png",
+            ImagePath = "/img/salad.png"
         };
         _dbContext.Meals.Add(meal);
         await _dbContext.SaveChangesAsync();

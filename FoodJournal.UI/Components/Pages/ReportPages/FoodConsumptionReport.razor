@@ -1,7 +1,4 @@
 ﻿@page "/reports/food-consumption"
-@using FoodJournal.ServiceContracts
-@using FoodJournal.ServiceContracts.DTOs.FoodDTOs
-@using FoodJournal.ServiceContracts.DTOs.MealDTOs
 @using FoodJournal.ServiceContracts.DTOs.ReportDTOs
 @inject IFoodService FoodService
 @inject IMealService MealService
@@ -22,10 +19,10 @@
             </MudSelect>
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="From" Date="@_fromDate" DateChanged="OnFromDateChanged" />
+            <MudDatePicker Label="From" Date="@_fromDate" DateChanged="OnFromDateChanged"/>
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="To" Date="@_toDate" DateChanged="OnToDateChanged" />
+            <MudDatePicker Label="To" Date="@_toDate" DateChanged="OnToDateChanged"/>
         </MudItem>
         <MudItem xs="12" md="2" Class="d-flex align-end">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GenerateReport" FullWidth="true">
@@ -34,7 +31,7 @@
         </MudItem>
     </MudGrid>
 
-    <MudDivider />
+    <MudDivider/>
 
     <MudText Typo="Typo.h5">Meal Consumption Report</MudText>
 
@@ -48,10 +45,10 @@
             </MudSelect>
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="From" Date="@_mealFromDate" DateChanged="OnMealFromDateChanged" />
+            <MudDatePicker Label="From" Date="@_mealFromDate" DateChanged="OnMealFromDateChanged"/>
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="To" Date="@_mealToDate" DateChanged="OnMealToDateChanged" />
+            <MudDatePicker Label="To" Date="@_mealToDate" DateChanged="OnMealToDateChanged"/>
         </MudItem>
         <MudItem xs="12" md="2" Class="d-flex align-end">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GenerateMealReport" FullWidth="true">
@@ -69,7 +66,8 @@
     {
         <MudPaper Class="pa-4" Outlined="true">
             <MudText Typo="Typo.h6">@_report.FoodName</MudText>
-            <MudText Typo="Typo.body1">Period: @_report.FromDate.ToString("yyyy-MM-dd") - @_report.ToDate.ToString("yyyy-MM-dd")</MudText>
+            <MudText Typo="Typo.body1">
+                Period: @_report.FromDate.ToString("yyyy-MM-dd") - @_report.ToDate.ToString("yyyy-MM-dd")</MudText>
             <MudText Typo="Typo.body1">Times consumed: @_report.TimesConsumed</MudText>
         </MudPaper>
     }
@@ -78,7 +76,8 @@
     {
         <MudPaper Class="pa-4" Outlined="true">
             <MudText Typo="Typo.h6">@_mealReport.MealName</MudText>
-            <MudText Typo="Typo.body1">Period: @_mealReport.FromDate.ToString("yyyy-MM-dd") - @_mealReport.ToDate.ToString("yyyy-MM-dd")</MudText>
+            <MudText Typo="Typo.body1">
+                Period: @_mealReport.FromDate.ToString("yyyy-MM-dd") - @_mealReport.ToDate.ToString("yyyy-MM-dd")</MudText>
             <MudText Typo="Typo.body1">Times consumed: @_mealReport.TimesConsumed</MudText>
         </MudPaper>
     }
@@ -114,7 +113,7 @@
             {
                 FoodId = _selectedFoodId,
                 FromDate = DateOnly.FromDateTime(_fromDate?.Date ?? DateTime.Today),
-                ToDate = DateOnly.FromDateTime(_toDate?.Date ?? DateTime.Today),
+                ToDate = DateOnly.FromDateTime(_toDate?.Date ?? DateTime.Today)
             };
 
             _report = await ReportService.GetFoodConsumptionReportAsync(request);
@@ -129,7 +128,7 @@
             {
                 MealId = _selectedMealId,
                 FromDate = DateOnly.FromDateTime(_mealFromDate?.Date ?? DateTime.Today),
-                ToDate = DateOnly.FromDateTime(_mealToDate?.Date ?? DateTime.Today),
+                ToDate = DateOnly.FromDateTime(_mealToDate?.Date ?? DateTime.Today)
             };
 
             _mealReport = await ReportService.GetMealConsumptionReportAsync(request);
@@ -173,4 +172,5 @@
         _mealToDate = value;
         return Task.CompletedTask;
     }
+
 }

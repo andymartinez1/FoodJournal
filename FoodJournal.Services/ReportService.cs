@@ -18,10 +18,7 @@ public class ReportService : IReportService
     public async Task LogFoodConsumptionAsync(int foodId, DateOnly consumedOn)
     {
         var foodExists = await _dbContext.FoodItems.AnyAsync(food => food.Id == foodId);
-        if (!foodExists)
-        {
-            throw new InvalidOperationException("Food not found.");
-        }
+        if (!foodExists) throw new InvalidOperationException("Food not found.");
 
         var entry = new FoodConsumptionEntry { FoodId = foodId, ConsumedOn = consumedOn };
 
@@ -32,10 +29,7 @@ public class ReportService : IReportService
     public async Task LogMealConsumptionAsync(int mealId, DateOnly consumedOn)
     {
         var mealExists = await _dbContext.Meals.AnyAsync(meal => meal.Id == mealId);
-        if (!mealExists)
-        {
-            throw new InvalidOperationException("Meal not found.");
-        }
+        if (!mealExists) throw new InvalidOperationException("Meal not found.");
 
         var entry = new MealConsumptionEntry { MealId = mealId, ConsumedOn = consumedOn };
 
@@ -47,18 +41,12 @@ public class ReportService : IReportService
         FoodConsumptionReportRequest request
     )
     {
-        if (request.FromDate > request.ToDate)
-        {
-            throw new ArgumentException("FromDate cannot be later than ToDate.");
-        }
+        if (request.FromDate > request.ToDate) throw new ArgumentException("FromDate cannot be later than ToDate.");
 
         var food = await _dbContext.FoodItems.FirstOrDefaultAsync(item =>
             item.Id == request.FoodId
         );
-        if (food is null)
-        {
-            throw new InvalidOperationException("Food not found.");
-        }
+        if (food is null) throw new InvalidOperationException("Food not found.");
 
         var timesConsumed = await _dbContext.FoodConsumptionEntries.CountAsync(entry =>
             entry.FoodId == request.FoodId
@@ -72,7 +60,7 @@ public class ReportService : IReportService
             FoodName = food.Name,
             FromDate = request.FromDate,
             ToDate = request.ToDate,
-            TimesConsumed = timesConsumed,
+            TimesConsumed = timesConsumed
         };
     }
 
@@ -80,16 +68,10 @@ public class ReportService : IReportService
         MealConsumptionReportRequest request
     )
     {
-        if (request.FromDate > request.ToDate)
-        {
-            throw new ArgumentException("FromDate cannot be later than ToDate.");
-        }
+        if (request.FromDate > request.ToDate) throw new ArgumentException("FromDate cannot be later than ToDate.");
 
         var meal = await _dbContext.Meals.FirstOrDefaultAsync(item => item.Id == request.MealId);
-        if (meal is null)
-        {
-            throw new InvalidOperationException("Meal not found.");
-        }
+        if (meal is null) throw new InvalidOperationException("Meal not found.");
 
         var timesConsumed = await _dbContext.MealConsumptionEntries.CountAsync(entry =>
             entry.MealId == request.MealId
@@ -103,7 +85,7 @@ public class ReportService : IReportService
             MealName = meal.Name,
             FromDate = request.FromDate,
             ToDate = request.ToDate,
-            TimesConsumed = timesConsumed,
+            TimesConsumed = timesConsumed
         };
     }
 }

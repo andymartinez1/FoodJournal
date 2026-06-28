@@ -70,9 +70,12 @@
         </MudCardContent>
 
         <MudCardActions Class="card-actions" Style="gap: 8px;">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="action-btn" OnClick="() => OnViewClicked.InvokeAsync(MealResponse.MealId)">View
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="action-btn"
+                       OnClick="() => OnViewClicked.InvokeAsync(MealResponse.MealId)">View
             </MudButton>
-            <MudButton Variant="Variant.Outlined" Size="Size.Small" Class="action-btn" OnClick="() => OnEditClicked.InvokeAsync(MealResponse.MealId)">Edit</MudButton>
+            <MudButton Variant="Variant.Outlined" Size="Size.Small" Class="action-btn"
+                       OnClick="() => OnEditClicked.InvokeAsync(MealResponse.MealId)">Edit
+            </MudButton>
         </MudCardActions>
     </MudCard>
 </MudItem>

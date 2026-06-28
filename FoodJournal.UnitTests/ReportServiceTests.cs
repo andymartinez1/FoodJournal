@@ -54,7 +54,7 @@ public class ReportServiceTests
         {
             FoodId = food.Id,
             FromDate = new DateOnly(2026, 4, 10),
-            ToDate = new DateOnly(2026, 4, 20),
+            ToDate = new DateOnly(2026, 4, 20)
         };
 
         var report = await _reportService.GetFoodConsumptionReportAsync(request);
@@ -81,7 +81,7 @@ public class ReportServiceTests
         {
             FoodId = food.Id,
             FromDate = new DateOnly(2026, 4, 1),
-            ToDate = new DateOnly(2026, 4, 30),
+            ToDate = new DateOnly(2026, 4, 30)
         };
 
         var report = await _reportService.GetFoodConsumptionReportAsync(request);
@@ -100,7 +100,7 @@ public class ReportServiceTests
         {
             FoodId = food.Id,
             FromDate = new DateOnly(2026, 4, 1),
-            ToDate = new DateOnly(2026, 4, 30),
+            ToDate = new DateOnly(2026, 4, 30)
         };
 
         var report = await _reportService.GetFoodConsumptionReportAsync(request);
@@ -141,7 +141,7 @@ public class ReportServiceTests
         {
             MealId = meal.Id,
             FromDate = new DateOnly(2026, 4, 10),
-            ToDate = new DateOnly(2026, 4, 20),
+            ToDate = new DateOnly(2026, 4, 20)
         };
 
         var report = await _reportService.GetMealConsumptionReportAsync(request);
@@ -168,7 +168,7 @@ public class ReportServiceTests
         {
             MealId = meal.Id,
             FromDate = new DateOnly(2026, 4, 1),
-            ToDate = new DateOnly(2026, 4, 30),
+            ToDate = new DateOnly(2026, 4, 30)
         };
 
         var report = await _reportService.GetMealConsumptionReportAsync(request);
@@ -187,7 +187,7 @@ public class ReportServiceTests
         {
             MealId = meal.Id,
             FromDate = new DateOnly(2026, 4, 1),
-            ToDate = new DateOnly(2026, 4, 30),
+            ToDate = new DateOnly(2026, 4, 30)
         };
 
         var report = await _reportService.GetMealConsumptionReportAsync(request);

@@ -33,7 +33,7 @@ public class IntegrationTests
             {
                 Name = "Salad Bowl",
                 MealType = MealType.Lunch,
-                ImagePath = "/img/salad-bowl.png",
+                ImagePath = "/img/salad-bowl.png"
             }
         );
 
@@ -42,7 +42,7 @@ public class IntegrationTests
             {
                 Name = "Lettuce",
                 Category = FoodCategory.Vegetable,
-                MealIds = new List<int> { createdMeal.MealId },
+                MealIds = new List<int> { createdMeal.MealId }
             }
         );
 
@@ -78,7 +78,7 @@ public class IntegrationTests
                 Name = "Prep Meal",
                 MealType = MealType.Dinner,
                 IngredientIds = new List<int> { ingredient1.Id, ingredient2.Id },
-                ImagePath = "/img/prep-meal.png",
+                ImagePath = "/img/prep-meal.png"
             }
         );
 
