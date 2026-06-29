@@ -1,0 +1,187 @@
+﻿@page "/log-consumption"
+@inject IFoodService FoodService
+@inject IMealService MealService
+@inject IReportService ReportService
+@inject ISnackbar Snackbar
+@rendermode InteractiveServer
+
+<PageTitle>Log Consumption</PageTitle>
+
+<MudPaper Class="pa-6 d-flex flex-column gap-4" Elevation="1">
+    <div>
+        <MudText Typo="Typo.h4">Log Food & Meals</MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">
+            Record what you ate on a specific day.
+        </MudText>
+    </div>
+
+    <MudDivider />
+
+    <MudGrid>
+        <MudItem xs="12" md="4">
+            <MudDatePicker Label="Date eaten"
+                           Date="@_consumedOn"
+                           DateChanged="OnConsumedOnChanged" />
+        </MudItem>
+    </MudGrid>
+
+    <MudTabs Rounded="true" Elevation="0" PanelClass="pt-4">
+        <MudTabPanel Text="Food" Icon="@Icons.Material.Filled.Restaurant">
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudSelect T="int" Label="Food" @bind-Value="_selectedFoodId" Disabled="@(!_foods.Any())">
+                        @foreach (var food in _foods)
+                        {
+                            <MudSelectItem T="int" Value="@food.FoodId">
+                                @food.Name
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12" md="3" Class="d-flex align-end">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               OnClick="LogFood"
+                               Disabled="@(!_foods.Any())"
+                               FullWidth="true">
+                        Log Food
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+
+            @if (!_foods.Any())
+            {
+                <MudAlert Severity="Severity.Info" Class="mt-4">
+                    Add foods before logging food consumption.
+                </MudAlert>
+            }
+        </MudTabPanel>
+
+        <MudTabPanel Text="Meal" Icon="@Icons.Material.Filled.DinnerDining">
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudSelect T="int" Label="Meal" @bind-Value="_selectedMealId" Disabled="@(!_meals.Any())">
+                        @foreach (var meal in _meals)
+                        {
+                            <MudSelectItem T="int" Value="@meal.MealId">
+                                @meal.Name
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12" md="3" Class="d-flex align-end">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               OnClick="LogMeal"
+                               Disabled="@(!_meals.Any())"
+                               FullWidth="true">
+                        Log Meal
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+
+            @if (!_meals.Any())
+            {
+                <MudAlert Severity="Severity.Info" Class="mt-4">
+                    Add meals before logging meal consumption.
+                </MudAlert>
+            }
+        </MudTabPanel>
+    </MudTabs>
+
+    @if (!string.IsNullOrWhiteSpace(_message))
+    {
+        <MudAlert Severity="@_messageSeverity">
+            @_message
+        </MudAlert>
+    }
+</MudPaper>
+
+@code {
+    private List<FoodResponse> _foods = new();
+    private List<MealResponse> _meals = new();
+
+    private int _selectedFoodId;
+    private int _selectedMealId;
+
+    private DateTime? _consumedOn = DateTime.Today;
+
+    private string? _message;
+    private Severity _messageSeverity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _foods = await FoodService.GetAllAsync();
+        _meals = await MealService.GetAllAsync();
+
+        _selectedFoodId = _foods.FirstOrDefault()?.FoodId ?? 0;
+        _selectedMealId = _meals.FirstOrDefault()?.MealId ?? 0;
+    }
+
+    private async Task LogFood()
+    {
+        if (_selectedFoodId == 0)
+        {
+            ShowMessage("Please select a food to log.", Severity.Warning);
+            return;
+        }
+
+        await RunWithHandling(async () =>
+        {
+            var consumedOn = DateOnly.FromDateTime(_consumedOn?.Date ?? DateTime.Today);
+            await ReportService.LogFoodConsumptionAsync(_selectedFoodId, consumedOn);
+
+            var foodName = _foods.FirstOrDefault(food => food.FoodId == _selectedFoodId)?.Name ?? "Food";
+            ShowMessage($"{foodName} logged for {consumedOn:yyyy-MM-dd}.", Severity.Success);
+            Snackbar.Add($"{foodName} logged successfully.", Severity.Success);
+        });
+    }
+
+    private async Task LogMeal()
+    {
+        if (_selectedMealId == 0)
+        {
+            ShowMessage("Please select a meal to log.", Severity.Warning);
+            return;
+        }
+
+        await RunWithHandling(async () =>
+        {
+            var consumedOn = DateOnly.FromDateTime(_consumedOn?.Date ?? DateTime.Today);
+            await ReportService.LogMealConsumptionAsync(_selectedMealId, consumedOn);
+
+            var mealName = _meals.FirstOrDefault(meal => meal.MealId == _selectedMealId)?.Name ?? "Meal";
+            ShowMessage($"{mealName} logged for {consumedOn:yyyy-MM-dd}.", Severity.Success);
+            Snackbar.Add($"{mealName} logged successfully.", Severity.Success);
+        });
+    }
+
+    private async Task RunWithHandling(Func<Task> operation)
+    {
+        try
+        {
+            _message = null;
+            await operation();
+        }
+        catch (Exception ex)
+        {
+            ShowMessage(ex.Message, Severity.Error);
+        }
+    }
+
+    private Task OnConsumedOnChanged(DateTime? value)
+    {
+        _consumedOn = value;
+        return Task.CompletedTask;
+    }
+
+    private void ShowMessage(string message, Severity severity)
+    {
+        _message = message;
+        _messageSeverity = severity;
+    }
+}
